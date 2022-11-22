@@ -1,9 +1,9 @@
 #website pages
 
-from flask import Blueprint
+from flask import Blueprint, render_template
 
 pages = Blueprint('pages',__name__)
 
 @pages.route('/')
 def home():
-    return "<a href=\"/login\" target=\"_blank\">This is a link</a>"
+    return render_template("home.html")
