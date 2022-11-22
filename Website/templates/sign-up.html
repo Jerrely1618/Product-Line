@@ -2,18 +2,24 @@
 {%block title%} Sign Up {%endblock%}
 
 {%block body%} 
-<br>
-<h3>Sign Up</h3>
+<div>
+    <h3>Sign Up</h3>
     <form action="http://localhost:5000/sign-up" method="post">
-        Name: <br><input type="text" name="name"></input></br>
-        Email: <br><input type="text" name="email"></input> </br>
-        Confirm email<br><input type="text" name="email_ver"></input></br>
-        Password: <br><input type="text" name="password"></input></br>
-        Confirm Password: <br><input type="text" name="password_ver"></input></br>
-        Phone Number: <br><input type="text" name = "phone"></input></br>
-        Address: <br><input type="text" name="address"></input></br>
-        Credit Card Number: <br><input type="text" name="Credit_card"></input></br>
+        Name: <input type="text" name="name"></input>
+        <br></br>
+        Email: <input type="text" name="email"></input> 
+        Confirm email: <input type="text" name="email_ver"></input>
+        <br></br>
+        Password: <input type="text" name="password"></input>
+        Confirm Password: <input type="text" name="password_ver"></input>
+        <br></br>
+        Phone Number: <input type="text" name = "phone"></input>
+        Address: <input type="text" name="address"></input>
+        <br></br>
+        Credit Card Number: <input type="text" name="Credit_card"></input>
+        <br></br>
+
         <input type="submit" value="Submit Form"></input>
     </form>
-</br>
+</div>
 {%endblock%}

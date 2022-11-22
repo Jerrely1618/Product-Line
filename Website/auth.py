@@ -41,8 +41,5 @@ def sign_up():
             print("Password wrong!")
         
         newGuestApp = GuestApplication(username,creditCard,address,phoneNum,VerifiedEmail,VerifiedPassword)
-        # Here we put the guestApp on a database  
-        print(newGuestApp.name)
-    else:
-        username = request.args.get("name")
+        return "<p>Application sent, "+ username +"</p>"
     return render_template("sign-up.html")
