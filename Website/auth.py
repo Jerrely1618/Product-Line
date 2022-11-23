@@ -1,13 +1,13 @@
 #Login/Sign_up pages
 
-from flask import Blueprint
+from flask import Blueprint, render_template
 
 verify_page = Blueprint('verify_page',__name__)
 
 @verify_page.route('/login')
 def login():
-    return "<p>Login<p>"
+    return render_template("login.html")
 
 @verify_page.route('/sign-up')
 def sign_up():
-    return "<p> sign up <p>"
+    return render_template("sign-up.html")
