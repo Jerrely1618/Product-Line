@@ -9,14 +9,29 @@
 
     <body>
         <br>
-            <h1>Website</h1>
+            <h1>Ebay</h1>
             <nav class="navbar">
                     
                 <a href="/">Home</a>
                 <a href="/login">Login</a>
                 <a href="/sign-up">Sign Up</a>  
             </nav>
-        </bar>
+            {%with messages = get_flashed_messages(with_categories = true)%}    
+                {%if messages%}
+                    {%for category,message in messages%}
+                        {%if category=="error"%}
+                            <div role = "alert">
+                                {{message}}
+                            </div>
+                        {% else %}
+                            <div role = "alert">
+                                {{message}}
+                            </div>
+                        {%endif%}
+                    {%endfor%}
+                {%endif%}
+            {%endwith%}
+        </br>
         {%block body%} 
         Body of the page
         {%endblock%}

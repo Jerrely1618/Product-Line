@@ -1,6 +1,6 @@
 #Login/Sign_up pages
 
-from flask import Blueprint,render_template,request
+from flask import Blueprint,render_template,request,flash
 
 class GuestApplication:
     name = ""
@@ -35,11 +35,16 @@ def sign_up():
         phoneNum = request.form['phone']
         address = request.form['address']
         creditCard = request.form['Credit_card']
-        if email != VerifiedEmail:
-            print("Wrong email!")
-        if Password != VerifiedPassword:
-            print("Password wrong!")
-        
-        newGuestApp = GuestApplication(username,creditCard,address,phoneNum,VerifiedEmail,VerifiedPassword)
-        return "<p>Application sent, "+ username +"</p>"
+        if len(username) < 3:
+            flash("Name should be at least 3 characters",category="error")
+        elif email != VerifiedEmail or len(email)<3:
+            flash("Wrong email!",category="error")
+        elif Password != VerifiedPassword:
+            flash("Password wrong!",category="error")
+        elif len(Password) < 7:
+            flash("TOO Short!",category="error")
+        else: 
+            flash("Application sent",category="Sucess")
+            newGuestApp = GuestApplication(username,creditCard,address,phoneNum,VerifiedEmail,VerifiedPassword)
+            
     return render_template("sign-up.html")
