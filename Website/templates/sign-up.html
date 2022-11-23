@@ -4,16 +4,16 @@
 {%block body%} 
 <br>
 <h3>Sign Up</h3>
-    <form>
-        Name: <br><input type="text" name="nm"></input></br>
+    <form action="http://localhost:5000/sign-up" method="post">
+        Name: <br><input type="text" name="name"></input></br>
         Email: <br><input type="text" name="email"></input> </br>
         Confirm email<br><input type="text" name="email_ver"></input></br>
-        Password: <br><input type="text"></input></br>
-        Confirm Password: <br><input type="text" name="password"></input></br>
-        Phone Number: <br><input type="text" name = "password_ver"></input></br>
+        Password: <br><input type="text" name="password"></input></br>
+        Confirm Password: <br><input type="text" name="password_ver"></input></br>
+        Phone Number: <br><input type="text" name = "phone"></input></br>
         Address: <br><input type="text" name="address"></input></br>
         Credit Card Number: <br><input type="text" name="Credit_card"></input></br>
-        <input type="submit"></input>
+        <input type="submit" value="Submit Form"></input>
     </form>
 </br>
 {%endblock%}
