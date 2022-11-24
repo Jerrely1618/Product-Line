@@ -6,23 +6,23 @@ class UserApplication(db.Model):
     name = db.Column(db.String(50))
     email = db.Column(db.String(50),unique=True,primary_key = True)
     password = db.Column(db.String(50))
-    address = db.Column(db.String(50),unique=True)
+    address = db.Column(db.String(50))
     phone = db.Column(db.String(50),unique=True)
-    credit_card = db.Column(db.String(50),unique=True)
+    credit_card = db.Column(db.String(50))
 
 class Users(db.Model,UserMixin):
     name = db.Column(db.String(50))
-    email = db.Column(db.String(50),unique=True,primary_key = True)
+    email = db.Column(db.String(50),unique=True,primary_key=True)
     password = db.Column(db.String(50))
-    address = db.Column(db.String(50),unique=True)
+    address = db.Column(db.String(50))
     phone = db.Column(db.String(50),unique=True)
-    credit_card = db.Column(db.String(50),unique=True)
-    itemsSelling = db.relationship('ItemsListed')
+    credit_card = db.Column(db.String(50))
+    
       
 
 class ItemsListed(db.Model):
-    title = db.Column(db.String(50),primary_key = True)
-    userOwnder = db.column(db.String(50),db.ForeignKey('users.email'))
-    keywords = db.Column(db.String(50),unique=True)
+    title = db.Column(db.String(50),unique=True,primary_key = True)
+    keywords = db.Column(db.String(50))
     time = db.Column(db.String(50))
-    priceRange = db.Column(db.String(50),unique=True)
+    priceRange = db.Column(db.String(50))
+    

@@ -1,22 +1,8 @@
 #Login/Sign_up pages
 
-from flask import Blueprint,render_template,request,flash
-
-class GuestApplication:
-    name = ""
-    credit_card = ""
-    address = ""
-    email = ""
-    password = ""
-    phone_num = ""
-    
-    def __init__(self,name,credit_card,address,phone,email,password) -> None:
-        self.name = name
-        self.credit_card = credit_card
-        self.address = address
-        self.email = email
-        self.phone_num = phone
-        self.password = password
+from flask import Blueprint,render_template,request,flash,redirect,url_for
+from .models import UserApplication
+from . import db
 
 verify_page = Blueprint('verify_page',__name__)
 
@@ -38,13 +24,16 @@ def sign_up():
         if len(username) < 3:
             flash("Name should be at least 3 characters",category="error")
         elif email != VerifiedEmail or len(email)<3:
-            flash("Wrong email!",category="error")
+            flash("Emails do not match.",category="error")
         elif Password != VerifiedPassword:
-            flash("Password wrong!",category="error")
+            flash("Passwords do not match.",category="error")
         elif len(Password) < 7:
-            flash("TOO Short!",category="error")
-        else: 
+            flash("Passsword is too short.",category="error")
+        else:             
+            newGuestApp = UserApplication(name=username,email=email,password=Password,address=address,phone=phoneNum,credit_card=creditCard)
+            db.session.add(newGuestApp)
+            db.session.commit()
             flash("Application sent",category="Sucess")
-            newGuestApp = GuestApplication(username,creditCard,address,phoneNum,VerifiedEmail,VerifiedPassword)
+            return redirect(url_for("pages.home"))
             
     return render_template("sign-up.html")

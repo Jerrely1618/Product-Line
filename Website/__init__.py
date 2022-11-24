@@ -3,14 +3,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 
-app = Flask(__name__)
-db = SQLAlchemy(app)
-
 DB_NAME= "database.db"
+db = SQLAlchemy()
+
+
 
 def create_app():
+    app = Flask(__name__)
     app.config['SECRET_KEY'] = 'devPassword'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
     db.init_app(app)
     
     from .directory import pages
@@ -21,9 +23,8 @@ def create_app():
     
     from .models import Users,UserApplication,ItemsListed
     
-    if not path.exists('Website/'+DB_NAME):
+    with app.app_context():
         db.create_all()
     
     return app
-    
         
