@@ -8,13 +8,7 @@
     </head>
 
     <body>
-        <br>
-            <form class="search_form">
-                <div class="search_bar">
-                        <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
-                        <input type="text" placeholder="Search...">
-                </div>
-            </form>
+            <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
             <nav class="navbar">
                 <a href="/">Home</a>
                 <a href="/login">Login</a>
@@ -24,18 +18,17 @@
                 {%if messages%}
                     {%for category,message in messages%}
                         {%if category=="error"%}
-                            <div role = "alert">
+                            <div class="alert_error alert" role = "alert">
                                 {{message}}
                             </div>
                         {% else %}
-                            <div role = "alert">
+                            <div class="alert_success alert" role = "alert">
                                 {{message}}
                             </div>
                         {%endif%}
                     {%endfor%}
                 {%endif%}
             {%endwith%}
-        </br>
         {%block body%} 
         Body of the page
         {%endblock%}

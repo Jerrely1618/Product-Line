@@ -8,6 +8,9 @@ verify_page = Blueprint('verify_page',__name__)
 
 @verify_page.route('/login',methods=['POST','GET'])
 def login():
+    if request.method=="POST":
+        username = request.form['username']
+        password = request.form['password']
     return render_template("login.html")
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
@@ -44,5 +47,4 @@ def sign_up():
             db.session.commit()
             flash("Application sent",category="Sucess")
             return redirect(url_for("pages.home"))
-            
     return render_template("sign-up.html")

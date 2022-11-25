@@ -8,6 +8,7 @@
     text-align: right;
     color:rgb(43, 62, 235);
     font-size: large;
+    margin-bottom: 0.1px;
 }
 a:hover, a:visited, a:link, a:active{
     text-decoration: none;
@@ -15,13 +16,25 @@ a:hover, a:visited, a:link, a:active{
 }
 /* Search*/
 .search_bar input{
-    width: 80%;
-    padding: 20px;
-    margin-left: 10px;
-    margin-top: 30px;
-    position: absolute;
+    width: 95%;
+    margin: 10px;
+    padding: 10px;
 }
-
+/* Alerts */
+.alert{
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 98%;
+    padding: 20px 0 20px 0;
+}
+.alert_error{
+    color: red;
+    background-color: #ffbfbf;
+}
+.alert_succes{
+    color: green;
+    background-color: greenyellow;
+}
 /* Sign up and Login Css */
 .auth {
     border-radius: 1rem;
@@ -53,7 +66,9 @@ a:hover, a:visited, a:link, a:active{
 .inputForm{
     max-width: 700px;
     width: 100%;
+    margin-top: 10px;
     padding: 25px 30px;
+    padding-right: 45px;
     border: 5px solid rgb(43, 62, 235);
     color:black;
     background-color: white;

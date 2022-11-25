@@ -1,5 +1,6 @@
 from . import db 
 from flask_login import UserMixin
+from datetime import datetime
 
 
 class UserApplication(db.Model):
@@ -35,6 +36,6 @@ class Complaints(db.Model,UserMixin):
 class ItemsListed(db.Model):
     title = db.Column(db.String(50),unique=True,primary_key = True)
     keywords = db.Column(db.String(50))
-    time = db.Column(db.String(50))
+    time = db.Column(db.DateTime,default=datetime.utcnow)
     priceRange = db.Column(db.String(50))
     
