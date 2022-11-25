@@ -9,6 +9,15 @@ verify_page = Blueprint('verify_page',__name__)
 @verify_page.route('/login',methods=['POST','GET'])
 def login():
     return render_template("login.html")
+@verify_page.route('/admin',methods=['POST','GET'])
+def admin():
+    return render_template("admin.html")
+@verify_page.route('/account',methods=['POST','GET'])
+def account():
+    return render_template("account.html")
+@verify_page.route('/browser',methods=['POST','GET'])
+def browser():
+    return render_template("browser.html")
 
 @verify_page.route('/sign-up',methods=['POST','GET'])
 def sign_up():
