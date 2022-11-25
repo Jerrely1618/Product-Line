@@ -1,18 +1,34 @@
 .navbar {
     color: blue;
-    height: 20px;
-    width: 900px;
-    border: 5px solid rgb(43, 62, 235);
+    height: 100%;
+    width: 98%;
+    border-bottom: 5px solid rgb(43, 62, 235);
     margin: 10px;
     background-color: white;
+    text-align: right;
+    color:rgb(43, 62, 235);
+    font-size: large;
+}
+a:hover, a:visited, a:link, a:active{
+    text-decoration: none;
+    color:inherit;
+}
+/* Search*/
+.search_bar input{
+    width: 80%;
+    padding: 20px;
+    margin-left: 10px;
+    margin-top: 30px;
+    position: absolute;
 }
 
 /* Sign up and Login Css */
 .auth {
     border-radius: 1rem;
-    height: 100vh;
+    height: 30vh;
     padding: 10px;
-    display: flex;
+    margin:auto;
+    width: 35%;
     justify-content: center;
     align-items: center;
 }
@@ -20,8 +36,10 @@
     font-size: 50px;
     font-weight: 1000;
     text-align: center;
-    color: rgb(43, 62, 235); 
-    position: relative;
+    color: white; 
+    border-radius: 7px;
+    padding: 5px;
+    background: rgb(43, 62, 235);
 }
 .auth_title::before{
     content: '';
@@ -69,14 +87,13 @@
 }
 .general_button{
     height: 100%;
-    width: 100%;
+    width: 105%;
     outline: none;
     color: white;
     border: 3px solid white;
     background-color: rgb(0, 47, 255);
     font-size: 18px;
     font-weight: 500;
-    letter-spacing: 1px;
     border-radius: 0.5rem;
 }
 .general_button:hover{
@@ -85,9 +102,8 @@
     border: 3px solid  rgb(0, 47, 255);
     font-size: 18px;
     font-weight: 500;
-    letter-spacing: 1px;
     height: 100%;
-    width: 100%;
+    width: 105%;
     outline: none;
     border-radius: 0.5rem;
 }
