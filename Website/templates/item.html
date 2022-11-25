@@ -1,0 +1,15 @@
+{% extends 'NavBase.html' %} 
+
+{%block body%} 
+<div class="item">
+    {% for item in items %}
+        <form>
+            <h2>{{item.title}}</h1>
+            <p>Total Cost: {{item.priceRange}}</p>
+            <p>Descriptions: {{item.keywords}}</p>
+            <input type="button" value="Bid" class = "item_button">
+            <input type="button" value="Report" class = "item_button">
+        </form>
+    {% endfor %}
+</div>
+{%endblock%}

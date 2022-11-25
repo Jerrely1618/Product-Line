@@ -7,8 +7,10 @@
         <title>{%block title%}NavBase{% endblock %}%</title>
     </head>
 
-    <body>
-            <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
+    <body>  
+            <a href="/">
+                <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
+            </a>
             <nav class="navbar">
                 <a href="/">Home</a>
                 <a href="/login">Login</a>

@@ -1,7 +1,7 @@
 #Login/Sign_up pages
 
 from flask import Blueprint,render_template,request,flash,redirect,url_for
-from .models import UserApplication
+from .models import UserApplication,ItemsListed
 from . import db
 
 verify_page = Blueprint('verify_page',__name__)
@@ -12,6 +12,12 @@ def login():
         username = request.form['username']
         password = request.form['password']
     return render_template("login.html")
+@verify_page.route('/item/<titleName>',methods=['POST','GET'])
+def item(titleName):
+    titleName = titleName+"#0"
+    item = ItemsListed.query.filter_by(title=titleName)
+    return render_template("item.html",items=item)
+
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
     return render_template("admin.html")

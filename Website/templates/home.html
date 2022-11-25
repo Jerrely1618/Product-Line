@@ -3,17 +3,26 @@
 
 {%block body%} 
 
-<form class="search_bar">
-    <input type="text" placeholder="Search...">
+<form class="search_bar" method="post">
+    <input type="text" placeholder="Search..." autocomplete="off" id="searchItem" name="searchItem">
 </form>
 <div class="items_list">
+    {%if items.count() == 0%}
+        <p>No item available '{{inputSearch}}'</p>
+    {% else %}
+    <h2> Latest Items: </h2>
     {%for item in items%}
-        <div class="item">
-            <h4>{{item.title}}</h4>
-            <p>{{item.priceRange}}</p>
-            <p>{{item.time}}</p>
-        </div>
+        <a href="/item/{{item.title}}">
+            <div class="brownse_item">
+                <div class="brownse_item_desc">
+                    <h4>{{item.title}}</h4>
+                    <h5>Cost Range: {{item.priceRange}}</h5>
+                </div>
+                <p>Posted on:{{item.time}}</p>
+            </div>
+        </a>    
     {%endfor%}
+    {%endif%}
 
 </div>
 {%endblock%}
