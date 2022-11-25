@@ -2,10 +2,21 @@
 {%block title%} Login {%endblock%}
 
 {%block body%} 
-<div align = center class="login">
-    <h3>Login</h3>
-    Username: <br><input type="text" name="username"></input></br>
-    Password: <br><input type="text" name="password"></input></br>
-    <input type="submit"></input>
+<div class="auth">
+    <form class = "inputForm">
+    <h1 class="auth_title">Login</h1>
+    <div class="section">
+    <div class="section_auth">    
+        <label for="name">Username</label> 
+        <input type="text" name="name" id="name" autocomplete="off"></input>
+    </div>
+    <div class="section_auth">  
+        <label for="name">Password:</label>  
+        <input type="text" name="name" id="name" autocomplete="off"></input>
+         
+    </div>
+</div>
+    <input class="general_button" type="submit"></input>
+    </form>
 </div>
 {%endblock%}
