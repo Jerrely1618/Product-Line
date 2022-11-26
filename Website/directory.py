@@ -3,11 +3,24 @@
 from flask import Blueprint, render_template,request
 from . import db
 from .models import ItemsListed
+from werkzeug.utils import secure_filename
+
+
 pages = Blueprint('pages',__name__)
 
 @pages.route('/',methods=['GET','POST'])
 def home():
     if request.method=="POST":
+        # image = request.files['img']
+        # filename = secure_filename(image.filename)
+        # mimeType = image.mimetype
+        # for i in range(10):
+        #     title = "NewObj"+str(i)
+        #     desc = "red beautiful"
+        #     priceRange = "56-98"
+        #     newItem = ItemsListed(title=title,keywords=desc,priceRange=priceRange,img=image.read(),mimetype=mimeType, picName=filename)
+        #     db.session.add(newItem)
+        #     db.session.commit()
         searchItem = request.form["searchItem"]
         itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
         if itemsList.count() == 0:

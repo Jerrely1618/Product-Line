@@ -3,7 +3,7 @@
 from flask import Blueprint,render_template,request,flash,redirect,url_for
 from .models import UserApplication,ItemsListed
 from . import db
-
+import base64
 verify_page = Blueprint('verify_page',__name__)
 
 @verify_page.route('/login',methods=['POST','GET'])
@@ -14,9 +14,10 @@ def login():
     return render_template("login.html")
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
 def item(titleName):
-    titleName = titleName+"#0"
     item = ItemsListed.query.filter_by(title=titleName)
-    return render_template("item.html",items=item)
+    for it in item:
+        image = base64.b64encode(it.img).decode('ascii')
+    return render_template("item.html",items=item,img = image)
 
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():

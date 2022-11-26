@@ -1,15 +1,18 @@
 {% extends 'NavBase.html' %} 
 
 {%block body%} 
-<div class="item">
+<form class="inputForm item">
     {% for item in items %}
-        <form>
-            <h2>{{item.title}}</h1>
-            <p>Total Cost: {{item.priceRange}}</p>
-            <p>Descriptions: {{item.keywords}}</p>
-            <input type="button" value="Bid" class = "item_button">
-            <input type="button" value="Report" class = "item_button">
-        </form>
+        <div class="container">
+            <h2 class="auth_title">{{item.title}}</h1>
+            
+            <div class="section">
+                <img src="data:;base64,{{img}}">
+                <p>Total Cost: ${{item.priceRange}}</p>
+                <p>Descriptions: {{item.keywords}}</p>
+            </div>
+            <input type="button" class="general_button" value="Report">
+        </div>
     {% endfor %}
-</div>
+    </form>
 {%endblock%}
