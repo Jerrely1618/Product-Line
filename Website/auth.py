@@ -21,6 +21,42 @@ def item(titleName):
 
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
+    ProcessApplications(){
+        for application in GuestApplication{
+            if (application.requirements == True){
+                users.append(application.user);
+            }
+        }
+
+    }
+
+    ProcessItems(){
+        for application in ItemApplication{
+            if (application.requirements == true){
+                ItemsListed.append(application.item);
+            }
+        }
+    }
+
+    WarnUser(user){	
+       if(users.complaints>=1){
+          print('User warned');
+       }
+    }
+
+    Statistics(){
+        reportsComplaints = len(reportsComplaints);
+        usersTotal = len(users);
+        itemsApplications = len(itemsApplications);
+        itemsTotal = len(items);
+        userApplications = len(userApplications);
+
+        print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
+         + userApplications + "Total item applications: " + itemsApplications);
+    }
+
+
+
     return render_template("admin.html")
 @verify_page.route('/account',methods=['POST','GET'])
 def account():
