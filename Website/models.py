@@ -38,7 +38,5 @@ class ItemsListed(db.Model):
     keywords = db.Column(db.String(50))
     time = db.Column(db.DateTime,default=datetime.utcnow)
     priceRange = db.Column(db.String(50))
-    picName = db.Column(db.Text)
     img = db.Column(db.Text)
-    mimetype = db.Column(db.Text)
     
