@@ -72,44 +72,92 @@ def itemUser(titleName,username):
 
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
-    # ProcessApplications(){
-    #     for application in GuestApplication{
-    #         if (application.requirements == True){
-    #             users.append(application.user);
-    #         }
-    #     }
-    # }
+     def ProcessApplications():
+      for application in guestApplication:
+           if (application.requirements == True):
+               Users.append(application.user)
+             
 
-    # ProcessItems(){
-    #     for application in ItemApplication{
-    #         if (application.requirements == true){
-    #             ItemsListed.append(application.item);
-    #         }
-    #     }
-    # }
+     def ProcessItems():
+        for application in ItemApplication:
+            if (application.requirements == True):
+               ItemsListed.append(application.item)
+    
 
-    # WarnUser(user){	
-    #    if(users.complaints>=1){
-    #       print('User warned');
-    #    }
-    # }
+     def WarnUser(user):	
+       if(Users.complaints>=1):
+          print('User warned')
+    
 
-    # Statistics(){
-    #     reportsComplaints = len(reportsComplaints);
-    #     usersTotal = len(users);
-    #     itemsApplications = len(itemsApplications);
-    #     itemsTotal = len(items);
-    #     userApplications = len(userApplications);
-
-    #     print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
-    #      + userApplications + "Total item applications: " + itemsApplications);
-    # }
-
-
+     def Statistics():
+        reportsComplaints = len(reportsComplaints)
+        usersTotal = len(Users)
+        itemsApplications = len(itemsApplications)
+        itemsTotal = len(items)
+        userApplications = len(userApplications)
+        print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
+         + userApplications + "Total item applications: " + itemsApplications)
 
     return render_template("admin.html")
+ 
 @verify_page.route('/account',methods=['POST','GET'])
 def account():
+    def changeBalance(user):
+        quantity = 1
+
+    def submitItem():
+        picture = ' '
+        title = ' '
+        keyWords = ' '
+        time
+        price
+
+         
+
+    def submitBid(item, user):
+        bid = input("Enter Bid: ")
+    
+
+    def complaint(user):
+        complaintInfo = input("Enter your complaint: ")
+
+    def rate(user):
+        rating = input("Enter rating between 1 & 5: ")
+
+    def transactionHistory():
+        transactionDict = {item1: price1, item2: price2}
+        print(transactionDict[i])
+
+    def accountInfo(user):
+        userPassword = input("Enter Password: ")
+        userName = input("Enter Name: ")
+        userAddress = input("Enter Address: ")
+        userPhone = input(" Enter Phone Number: ")
+        userCreditCardNumber = input("Enter Credit Card Number: ")
+        
+        print("Password: " + userPassword + "Name: " + userName + "Address: "
+        + userAddress + "Phone: " + userPhone + "Credit Card Number: "
+        + userCreditCardNumber)
+
+    def changeInfo():
+        newPassword = input("Enter New Password: ")
+        newPassword = userPassword
+
+        newName = input("Enter New Name: ")
+        newName = userName
+
+        newAddress = input("Enter New Address: ")
+        newAddress = userAddress
+
+        newPhone = input("Enter New Phone Number: ")
+        newPhone = userPhone
+
+        newCreditCardNumber = input("Enter New Credit Card Number: ")
+        newCreditCardNumber = userCreditCardNumber
+
+
+
+    
     return render_template("account.html")
 
 @verify_page.route('/sign-up',methods=['POST','GET'])
