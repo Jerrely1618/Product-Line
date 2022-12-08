@@ -73,24 +73,24 @@ def itemUser(titleName,username):
 
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
-     def ProcessApplications():
-      for application in guestApplication:
+    def ProcessApplications()->None:
+        for application in guestApplication:
            if (application.requirements == True):
                Users.append(application.user)
              
 
-     def ProcessItems():
+    def ProcessItems()->None:
         for application in ItemApplication:
             if (application.requirements == True):
                ItemsListed.append(application.item)
     
 
-     def WarnUser(user):	
+    def WarnUser(user)->None:	
        if(Users.complaints>=1):
           print('User warned')
     
 
-     def Statistics():
+    def Statistics()->None:
         reportsComplaints = len(reportsComplaints)
         usersTotal = len(Users)
         itemsApplications = len(itemsApplications)
@@ -98,8 +98,8 @@ def admin():
         userApplications = len(userApplications)
         print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
          + userApplications + "Total item applications: " + itemsApplications)
-
     return render_template("admin.html")
+    
  
 @verify_page.route('/account',methods=['POST','GET'])
 def account():
@@ -110,8 +110,8 @@ def account():
         picture = ' '
         title = ' '
         keyWords = ' '
-        time
-        price
+        time = ''
+        price = ''
 
          
 
