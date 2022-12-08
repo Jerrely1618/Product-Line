@@ -151,6 +151,9 @@ a:hover, a:visited, a:link, a:active{
     align-items: center;
     width:100%;
 }
+.item input:hover{
+    width:100%;
+}
 .item img{
     width: 100%;
     height: 100%;

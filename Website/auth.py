@@ -17,6 +17,7 @@ def item(titleName):
     item = ItemsListed.query.filter_by(title=titleName)
     for it in item:
         image = base64.b64encode(it.img).decode('ascii')
+        print(image)
     return render_template("item.html",items=item,img = image)
 
 @verify_page.route('/admin',methods=['POST','GET'])
