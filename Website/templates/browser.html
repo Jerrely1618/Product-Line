@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html>
-    <head> 
-        <meta charset = "utf-8" />
-        <meta name="viewport" content = "width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="{{url_for('static',filename='general.css')}}">
-        <title>Home</title>
-    </head>
+{% extends 'NavUser.html' %}
+{%block title%} Welcome {%endblock%}
 
-    <body>  
-            <a href="/browser/{{user.email}}">
-                <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
-            </a>
-            <nav class="navbar">
-                <a href="/browser/{{user.email}}">Home</a>
-                <a href="/account/{{user.email}}">Account</a>
-                <a href="/">Logout</a>
-            </nav>
+{%block body%} 
             <h2 class="auth_title welcome"> Welcome {{user.name}}!</h2>
             <form class="search_bar" method="POST">
                 <input type="text" id="searchItem" name="searchItem" placeholder="Search...">
             </form>
+            <a href="/newItem/{{user.email}}">Add Item</a>
             <div class="items_list">
                 {%if items.count() == 0%}
                     <p>No item available '{{inputSearch}}'</p>
@@ -37,6 +24,4 @@
                     </a>    
                 {%endfor%}
                 {%endif%}
-            </div>
-        </body>
-</html>
+{%endblock%}

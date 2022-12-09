@@ -1,7 +1,7 @@
 #Login/Sign_up pages
 
 from flask import Blueprint,render_template,request,flash,redirect,url_for
-from .models import UserApplication,ItemsListed,Users
+from .models import UserApplication,Items as ItemsListed,Users
 from . import db
 import base64
 verify_page = Blueprint('verify_page',__name__)
@@ -12,14 +12,6 @@ def browser(username):
     for i in userSent:
         user = i
     if request.method=="POST":
-        # image = request.files['img']
-        # for i in range(10):
-        #     title = "NewObj"+str(i)
-        #     desc = "red beautiful"
-        #     priceRange = "56-98"
-        #     newItem = ItemsListed(title=title,keywords=desc,priceRange=priceRange,img=image.read())
-        #     db.session.add(newItem)
-        #     db.session.commit()
         searchItem = request.form["searchItem"]
         itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
         if itemsList.count() == 0:
@@ -52,7 +44,6 @@ def login():
     # tryUser = Users(name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
     # db.session.add(tryUser)
     # db.session.commit()
-    
     return render_template("login.html")
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
 def item(titleName):
@@ -70,7 +61,22 @@ def itemUser(titleName,username):
     for it in item:
         image = base64.b64encode(it.img).decode('ascii')
     return render_template("itemUser.html",items=item,img=image,user=user)
-
+@verify_page.route('/newItem/<username>',methods=['POST','GET'])
+def itemInput(username):
+    userSent = Users.query.filter_by(email=username)
+    for i in userSent:
+        user = i
+    if request.method=="POST":
+        title = request.form['title']
+        price = request.form['price']
+        desc = request.form['keywords']
+        image = request.files['image']
+        newItem = ItemsListed(title=title,user=user,keywords=desc,priceRange=price,img=image.read())
+        db.session.add(newItem)
+        db.session.commit()
+        return redirect('/browser/'+user) 
+    return render_template('inputItem.html',user=user)
+    
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
     def ProcessApplications()->None:

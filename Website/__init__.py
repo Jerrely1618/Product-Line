@@ -21,7 +21,7 @@ def create_app():
     app.register_blueprint(pages,url_prefix = '/')
     app.register_blueprint(verify_page,url_prefix = '/')
     
-    from .models import Users,UserApplication,ItemsListed
+    from .models import Users,UserApplication,Items as ItemsListed
     
     with app.app_context():
         db.create_all()

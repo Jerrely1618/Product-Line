@@ -1,0 +1,26 @@
+{% extends 'NavUser.html' %}
+{%block title%} New Item {%endblock%}
+
+{%block body%} 
+<h3>Enter Item:</h3>
+<form method = "POST">
+    <div>
+        <label for="title">Enter the title:</label>
+        <input type="text" placeholder="Title" name="title" id="title" autocomplete="off"></input>
+    </div>
+    <div>
+        <label for="price">Enter the price range:</label>
+        <input type="text" placeholder="Price" name="price" id="price" autocomplete="off"></input>
+    </div>
+    <div>
+        <label for="keywords">Descriptive keywords:</label>
+        <input type="text" placeholder="Keywords" name="keywords" id="keywords" autocomplete="off"></input>
+    </div>
+    <div>
+        <label for="image">Upload an image:</label>
+        <input type="file" enctype="multipart/form-data" name="image" id="image"></input>
+    </div>
+    <input type="submit" value="Submit"></input>
+</form>
+
+{%endblock%}

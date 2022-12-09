@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template,request
 from . import db
-from .models import ItemsListed
+from .models import Items as ItemsListed
 
 
 pages = Blueprint('pages',__name__)
