@@ -19,13 +19,13 @@ class ItemsApplication(db.Model):
 
 class Complaints(db.Model,UserMixin):
     user = db.Column(db.String(50),db.ForeignKey('users.email'))
-    description = db.Column(db.String(50),primary_key=True)
-    user_complainer = db.Column(db.String)
+    description = db.Column(db.String(50))
+    user_complainer = db.Column(db.String,primary_key=True)
     
 class Reports(db.Model,UserMixin):
     title = db.Column(db.String,db.ForeignKey('items.title'))
-    description = db.Column(db.String,primary_key=True)
-    user_complainer = db.Column(db.String)
+    description = db.Column(db.String)
+    user_complainer = db.Column(db.String,primary_key=True)
 
 class Items(db.Model):
     title = db.Column(db.String(50),unique=True,primary_key = True)
