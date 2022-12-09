@@ -1,17 +1,18 @@
 {% extends 'NavBase.html' %} 
 
 {%block body%} 
-<form class="inputForm item">
+<form class="inputForm item" mehtod = "POST">
     {% for item in items %}
         <div class="container">
             <h2 class="auth_title">{{item.title}}</h1>
             
             <div class="section">
                 <img src="data:;base64,{{img}}">
-                <p>Total Cost: ${{item.priceRange}}</p>
+                <p>Total Cost: ${{item.price}}</p>
                 <p>Descriptions: {{item.keywords}}</p>
             </div>
-            <input type="button" class="general_button" value="Report">
+            <input type="submit" class="general_button" value="Report">
+            <input type="text" class="bid_label" name="description" id = "description" autocomplete="off" placeholder="Report description">
         </div>
     {% endfor %}
 </form>

@@ -10,12 +10,12 @@ pages = Blueprint('pages',__name__)
 @pages.route('/',methods=['GET','POST'])
 def home():
     if request.method=="POST":
-        # image = request.files['img']
+        # image = request.files['image']
         # for i in range(10):
         #     title = "NewObj"+str(i)
         #     desc = "red beautiful"
-        #     priceRange = "56-98"
-        #     newItem = ItemsListed(title=title,keywords=desc,priceRange=priceRange,img=image.read())
+        #     priceRange = "56"
+        #     newItem = ItemsListed(title=title,keywords=desc,price=priceRange,img=image.read())
         #     db.session.add(newItem)
         #     db.session.commit()
         searchItem = request.form["searchItem"]

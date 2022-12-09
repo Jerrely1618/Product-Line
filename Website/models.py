@@ -18,19 +18,22 @@ class ItemsApplication(db.Model):
     priceRange = db.Column(db.String(50))
 
 class Complaints(db.Model,UserMixin):
-    user = db.Column(db.String(50),db.ForeignKey('users.email'),primary_key=True)
-    description = db.Column(db.String(50))
+    user = db.Column(db.String(50),db.ForeignKey('users.email'))
+    description = db.Column(db.String(50),primary_key=True)
+    user_complainer = db.Column(db.String)
     
 class Reports(db.Model,UserMixin):
-    title = db.Column(db.String(50),db.ForeignKey('items.title'),primary_key=True)
-    description = db.Column(db.String(50))
+    title = db.Column(db.String,db.ForeignKey('items.title'))
+    description = db.Column(db.String,primary_key=True)
+    user_complainer = db.Column(db.String)
 
 class Items(db.Model):
     title = db.Column(db.String(50),unique=True,primary_key = True)
     keywords = db.Column(db.String(50))
     time = db.Column(db.DateTime,default=datetime.utcnow)
-    priceRange = db.Column(db.String(50))
+    price = db.Column(db.String)
     img = db.Column(db.Text)
+    userBidder = db.Column(db.String)
     reports = db.relationship('Reports')
     user = db.Column(db.String,db.ForeignKey('users.email'))
     

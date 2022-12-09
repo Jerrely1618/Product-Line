@@ -16,19 +16,37 @@
                 <a href="/account/{{user.email}}">Account</a>
                 <a href="/">Logout</a>
             </nav>
-            <form class="inputForm item">
+            {%with messages = get_flashed_messages(with_categories = true)%}    
+                {%if messages%}
+                    {%for category,message in messages%}
+                        {%if category=="error"%}
+                            <div class="alert_error alert" role = "alert">
+                                {{message}}
+                            </div>
+                        {% else %}
+                            <div class="alert_success alert" role = "alert">
+                                {{message}}
+                            </div>
+                        {%endif%}
+                    {%endfor%}
+                {%endif%}
+            {%endwith%}
+            <form class="inputForm item" method = "POST">
+                
                 {% for item in items %}
                     <div class="container">
                         <h2 class="auth_title">{{item.title}}</h1>
                         
                         <div class="section">
                             <img src="data:;base64,{{img}}">
-                            <p>Total Cost: ${{item.priceRange}}</p>
+                            <p>Total Cost: ${{item.price}}</p>
                             <p>Descriptions: {{item.keywords}}</p>
                         </div>
-                        <input type="text" class="bid_label" autocomplete="off">
-                        <input type="button" class="general_button" value="Bid">
-                        <input type="button" class="general_button" value="Report">
+                        <input type="text" class="bid_label" name="bid" id = "bid" autocomplete="off" placeholder="Amount in dollars">
+                        <input type="submit" class="general_button" name = "submit" value="Bid">
+                        <input type="submit" class="general_button" name = "submit" value="Report Item">
+                        <input type="submit" class="general_button" name = "submit" value="Complaint about User">
+                        <input type="text" class="bid_label" name="description" id = "description" autocomplete="off" placeholder="Complaint/Report description">
                     </div>
                 {% endfor %}
             </form>

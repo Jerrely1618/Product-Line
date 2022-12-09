@@ -1,7 +1,7 @@
 #Login/Sign_up pages
 
 from flask import Blueprint,render_template,request,flash,redirect,url_for
-from .models import UserApplication,Items as ItemsListed,Users
+from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints
 from . import db
 import base64
 verify_page = Blueprint('verify_page',__name__)
@@ -50,7 +50,11 @@ def item(titleName):
     item = ItemsListed.query.filter_by(title=titleName)
     for it in item:
         image = base64.b64encode(it.img).decode('ascii')
-        print(image)
+        if request.method == "POST":
+            newReport = Reports(title=it.title,description = request.form["description"],user_complainer="Guest")
+            db.session.add(newReport)
+            db.session.commit()
+            flash("Reported.",category="success")
     return render_template("item.html",items=item,img = image)
 @verify_page.route('/item/<titleName>/<username>',methods=['POST','GET'])
 def itemUser(titleName,username):
@@ -60,6 +64,26 @@ def itemUser(titleName,username):
     item = ItemsListed.query.filter_by(title=titleName)
     for it in item:
         image = base64.b64encode(it.img).decode('ascii')
+        if request.method == "POST":
+            if request.form["submit"] == "Bid":
+                if (float)(it.price) < (float)(request.form["bid"]):
+                    print("HERE",it.price)
+                    it.price = request.form["bid"]
+                    it.userBidder = user.email
+                    db.session.commit()
+                    flash("Bid of $"+request.form["bid"]+" submitted",category = "success")
+                else:
+                    flash("Too little.",category="error")
+            elif request.form["submit"] == "Report Item":
+                newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user)
+                db.session.add(newReport)
+                db.session.commit()
+                flash("Reported.",category="success")
+            else:
+                newComplaint = Complaints(user=it.user,description=request.form["description"],user_complainer=user)
+                db.session.add(newComplaint)
+                db.session.commit()
+                flash("Complaint Submitted.",category="success")
     return render_template("itemUser.html",items=item,img=image,user=user)
 @verify_page.route('/newItem/<username>',methods=['POST','GET'])
 def itemInput(username):
@@ -67,14 +91,13 @@ def itemInput(username):
     for i in userSent:
         user = i
     if request.method=="POST":
-        title = request.form['title']
-        price = request.form['price']
-        desc = request.form['keywords']
+        title = request.form.get('title')
+        price = request.form.get('price')
+        desc = request.form.get('keywords')
         image = request.files['image']
-        newItem = ItemsListed(title=title,user=user,keywords=desc,priceRange=price,img=image.read())
+        newItem = ItemsListed(title=title,user=user,keywords=desc,price=price,img=image.read())
         db.session.add(newItem)
         db.session.commit()
-        return redirect('/browser/'+user) 
     return render_template('inputItem.html',user=user)
     
 @verify_page.route('/admin',methods=['POST','GET'])
