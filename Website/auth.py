@@ -14,11 +14,6 @@ def browser(username):
     if request.method=="POST":
         searchItem = request.form["searchItem"]
         itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
-        if itemsList.count() == 0:
-            itemsListWord = ItemsListed.query.order_by(ItemsListed.time)
-            for item in itemsListWord:
-                if searchItem in item.keywords:
-                    return render_template("browser.html",items=itemsListWord,user=user)
         return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
     itemsList = ItemsListed.query.order_by(ItemsListed.time)
     return render_template("browser.html",items=itemsList,user=user)
@@ -37,7 +32,7 @@ def login():
         flash("User or password do not matched with any of our records")
     # username = "random89@gmail.com"
     # password = "random89"
-    # name = "randy"
+    # name = "Randy"
     # phone = "213809128645463"
     # creditcard="3213124121"
     # address = "Brooklyna"
@@ -45,6 +40,7 @@ def login():
     # db.session.add(tryUser)
     # db.session.commit()
     return render_template("login.html")
+
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
 def item(titleName):
     item = ItemsListed.query.filter_by(title=titleName)
@@ -56,6 +52,7 @@ def item(titleName):
             db.session.commit()
             flash("Reported.",category="success")
     return render_template("item.html",items=item,img = image)
+
 @verify_page.route('/item/<titleName>/<username>',methods=['POST','GET'])
 def itemUser(titleName,username):
     userSent = Users.query.filter_by(email=username)
@@ -67,7 +64,6 @@ def itemUser(titleName,username):
         if request.method == "POST":
             if request.form["submit"] == "Bid":
                 if (float)(it.price) < (float)(request.form["bid"]):
-                    print("HERE",it.price)
                     it.price = request.form["bid"]
                     it.userBidder = user.email
                     db.session.commit()
@@ -75,16 +71,17 @@ def itemUser(titleName,username):
                 else:
                     flash("Too little.",category="error")
             elif request.form["submit"] == "Report Item":
-                newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user)
+                newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user.email)
                 db.session.add(newReport)
                 db.session.commit()
                 flash("Reported.",category="success")
             else:
-                newComplaint = Complaints(user=it.user,description=request.form["description"],user_complainer=user)
+                newComplaint = Complaints(user=it.user,description=request.form["description"],user_complainer=user.email)
                 db.session.add(newComplaint)
                 db.session.commit()
                 flash("Complaint Submitted.",category="success")
     return render_template("itemUser.html",items=item,img=image,user=user)
+
 @verify_page.route('/newItem/<username>',methods=['POST','GET'])
 def itemInput(username):
     userSent = Users.query.filter_by(email=username)
@@ -95,7 +92,8 @@ def itemInput(username):
         price = request.form.get('price')
         desc = request.form.get('keywords')
         image = request.files['image']
-        newItem = ItemsListed(title=title,user=user,keywords=desc,price=price,img=image.read())
+        buyerDummy = "Dummy"
+        newItem = ItemsListed(img=image.read(),user_bidder=buyerDummy,title=title,user=user.email,keywords=desc,price=price)
         db.session.add(newItem)
         db.session.commit()
     return render_template('inputItem.html',user=user)

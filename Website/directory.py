@@ -20,11 +20,6 @@ def home():
         #     db.session.commit()
         searchItem = request.form["searchItem"]
         itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
-        if itemsList.count() == 0:
-            itemsListWord = ItemsListed.query.order_by(ItemsListed.time)
-            for item in itemsListWord:
-                if searchItem in item.keywords:
-                    return render_template("home.html",items=itemsListWord)
         return render_template("home.html",items=itemsList,inputSearch=searchItem)
     itemsList = ItemsListed.query.order_by(ItemsListed.time)
     return render_template("home.html",items=itemsList)
