@@ -16,6 +16,7 @@ class ItemsApplication(db.Model):
     keywords = db.Column(db.String(50))
     time = db.Column(db.String(50))
     priceRange = db.Column(db.String(50))
+    user = db.Column(db.String,db.ForeignKey('users.email'))
 
 class Complaints(db.Model,UserMixin):
     user = db.Column(db.String(50),db.ForeignKey('users.email'))

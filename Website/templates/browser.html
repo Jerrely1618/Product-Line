@@ -21,10 +21,7 @@
             <form class="search_bar" method="POST">
                 <input type="text" id="searchItem" name="searchItem" placeholder="Search...">
                 
-                    <a href="/newItem/{{user.email}}">
-                    Add Item
-                    </a>
-                </a>
+                <a href="/newItem/{{user.email}}">Add Item</a>
             </form>
             <div class="items_list">
                 {%if items.count() == 0%}
