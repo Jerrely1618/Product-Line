@@ -39,8 +39,9 @@ class Items(db.Model):
     user = db.Column(db.String,db.ForeignKey('users.email'))
     
 class Users(db.Model,UserMixin):
+    token = db.Column(db.String,unique=True,primary_key=True)
     name = db.Column(db.String(50))
-    email = db.Column(db.String(50),unique=True,primary_key=True)
+    email = db.Column(db.String(50),unique=True)
     password = db.Column(db.String(50))
     address = db.Column(db.String(50))
     phone = db.Column(db.String(50),unique=True)

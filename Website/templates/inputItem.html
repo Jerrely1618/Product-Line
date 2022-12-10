@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head> 
-        <meta charset = "utf-8" />
-        <meta name="viewport" content = "width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="{{url_for('static',filename='general.css')}}">
-        <title>New Item</title>
-    </head>
-
-    <body>  
-        <a href="/browser/{{user.email}}">
-            <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
-        </a>
-        <nav class="navbar">
-            <a href="/browser/{{user.email}}">Home</a>
-            <a href="/account/{{user.email}}">Account</a>
-            <a href="/">Logout</a>
-        </nav>
+{% extends 'NavUser.html' %}
+{%block title%}Item{%endblock%}
+    {%block body%}
         <h3>Enter Item:</h3>
         <form method = "POST" enctype="multipart/form-data">
             <div>
@@ -36,5 +21,4 @@
             </div>
             <input type="submit" value="Submit"></input>
         </form>
-    </body>
-    </html>
+        {%endblock%}

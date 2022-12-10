@@ -8,12 +8,12 @@
     </head>
 
     <body>  
-            <a href="/browser/{{user.email}}">
+            <a href="/browser/{{user.token}}">
                 <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
             </a>
             <nav class="navbar">
-                <a href="/browser/{{user.email}}">Home</a>
-                <a href="/account/{{user.email}}">Account</a>
+                <a href="/browser/{{user.token}}">Home</a>
+                <a href="/account/{{user.token}}">Account</a>
                 <a href="/">Logout</a>
             </nav>
             {%with messages = get_flashed_messages(with_categories = true)%}    

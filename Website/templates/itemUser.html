@@ -10,7 +10,7 @@
                             <p>Total Cost: ${{item.price}}</p>
                             <p>Descriptions: {{item.keywords}}</p>
                         </div>
-                        {% if user.email != item.user %}
+                        {% if user.token != item.user %}
                             <input type="text" class="bid_label" name="bid" id = "bid" autocomplete="off" placeholder="Amount in dollars">
                             <input type="submit" class="general_button" name = "submit" value="Bid">
                             <input type="submit" class="general_button" name = "submit" value="Report Item">

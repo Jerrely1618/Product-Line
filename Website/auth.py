@@ -4,11 +4,15 @@ from flask import Blueprint,render_template,request,flash,redirect,url_for
 from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints
 from . import db
 import base64 #src = https://stackoverflow.com/questions/2323128/convert-string-in-base64-to-image-and-save-on-filesystem
+import secrets
+
 verify_page = Blueprint('verify_page',__name__)
+def generateToken() -> str:
+    return secrets.token_urlsafe(16)
 
 @verify_page.route('/browser/<username>',methods=['POST','GET'])
 def browser(username):
-    user = Users.query.filter_by(email=username).first()
+    user = Users.query.filter_by(token=username).first()
     if request.method=="POST":
         searchItem = request.form["searchItem"]
         itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
@@ -21,12 +25,13 @@ def login():
     if request.method=="POST":
         username = request.form['username']
         password = request.form['password']
-        users = Users.query.filter_by(email=username)
-        for user in users:  
+        user = Users.query.filter_by(email=username).first()  
+        print(user)
+        if user:
             if user.password != password:
                 flash("User or password do not matched with any of our records")   
             else:
-                return redirect('/browser/'+username)
+                return redirect('/browser/'+user.token)
         flash("User or password do not matched with any of our records")
     # username = "random89@gmail.com"
     # password = "random89"
@@ -34,7 +39,8 @@ def login():
     # phone = "213809128645463"
     # creditcard="3213124121"
     # address = "Brooklyna"
-    # tryUser = Users(name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # token = generateToken()
+    # tryUser = Users(token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
     # db.session.add(tryUser)
     # db.session.commit()
     return render_template("login.html")
@@ -52,7 +58,7 @@ def item(titleName):
 
 @verify_page.route('/item/<titleName>/<username>',methods=['POST','GET'])
 def itemUser(titleName,username):
-    user = Users.query.filter_by(email=username).first()
+    user = Users.query.filter_by(token=username).first()
     it = ItemsListed.query.filter_by(title=titleName).first()
     image = base64.b64encode(it.img).decode('ascii')
     if request.method == "POST":
@@ -65,7 +71,7 @@ def itemUser(titleName,username):
             else:
                 flash("Too little.",category="error")
         elif request.form["submit"] == "Report Item":
-            newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user.email)
+            newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user.token)
             db.session.add(newReport)
             db.session.commit()
             flash("Reported.",category="success")
@@ -73,9 +79,9 @@ def itemUser(titleName,username):
             db.session.delete(it)
             db.session.commit()
             flash("Item sold.",category = "success")
-            return redirect("/browser/"+user.email)
+            return redirect("/browser/"+user.token)
         else:
-            newComplaint = Complaints(user=it.user,description=request.form["description"],user_complainer=user.email)
+            newComplaint = Complaints(user=it.user,description=request.form["description"],user_complainer=user.token)
             db.session.add(newComplaint)
             db.session.commit()
             flash("Complaint Submitted.",category="success")
@@ -83,14 +89,14 @@ def itemUser(titleName,username):
 
 @verify_page.route('/newItem/<username>',methods=['POST','GET'])
 def itemInput(username):
-    user = Users.query.filter_by(email=username).first()
+    user = Users.query.filter_by(token=username).first()
     if request.method=="POST":
         title = request.form.get('title')
         price = request.form.get('price')
         desc = request.form.get('keywords')
         image = request.files['image']
         buyerDummy = "Dummy"
-        newItem = ItemsListed(img=image.read(),user_bidder=buyerDummy,title=title,user=user.email,keywords=desc,price=price)
+        newItem = ItemsListed(img=image.read(),user_bidder=buyerDummy,title=title,user=user.token,keywords=desc,price=price)
         db.session.add(newItem)
         db.session.commit()
     return render_template('inputItem.html',user=user)
@@ -127,7 +133,7 @@ def admin():
  
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):
-    user = Users.query.filter_by(email=username).first()
+    user = Users.query.filter_by(token=username).first()
     return render_template("account.html",user=user)
     def changeBalance(user):
         quantity = 1

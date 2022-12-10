@@ -5,7 +5,7 @@
             <form class="search_bar" method="POST">
                 <input type="text" id="searchItem" name="searchItem" placeholder="Search...">
                 
-                <a href="/newItem/{{user.email}}">Add Item</a>
+                <a href="/newItem/{{user.token}}">Add Item</a>
             </form>
             <div class="items_list">
                 {%if items.count() == 0%}
@@ -13,7 +13,7 @@
                 {% else %}
                 <h2> Latest Items: </h2>
                     {%for item in items%}
-                        <a href="/item/{{item.title}}/{{user.email}}">
+                        <a href="/item/{{item.title}}/{{user.token}}">
                             <div class="brownse_item">
                                 <div class="brownse_item_desc">
                                     <h4>{{item.title}}</h4>
