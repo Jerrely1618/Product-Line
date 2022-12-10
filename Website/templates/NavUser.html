@@ -4,17 +4,17 @@
         <meta charset = "utf-8" />
         <meta name="viewport" content = "width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="{{url_for('static',filename='general.css')}}">
-        <title>{%block title%}NavBase{% endblock %}</title>
+        <title>{% block title%}Title{% endblock  %}</title>
     </head>
 
     <body>  
-            <a href="/">
+            <a href="/browser/{{user.email}}">
                 <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
             </a>
             <nav class="navbar">
-                <a href="/">Home</a>
-                <a href="/login">Login</a>
-                <a href="/sign-up">Sign Up</a>
+                <a href="/browser/{{user.email}}">Home</a>
+                <a href="/account/{{user.email}}">Account</a>
+                <a href="/">Logout</a>
             </nav>
             {%with messages = get_flashed_messages(with_categories = true)%}    
                 {%if messages%}
@@ -31,7 +31,10 @@
                     {%endfor%}
                 {%endif%}
             {%endwith%}
-        {%block body%} 
-        {%endblock%}
+                
+        {% block body %}
+                        
+        {% endblock  %}
     </body>
+
 </html>

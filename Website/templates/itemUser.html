@@ -1,39 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head> 
-        <meta charset = "utf-8" />
-        <meta name="viewport" content = "width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="{{url_for('static',filename='general.css')}}">
-        <title>Home</title>
-    </head>
-
-    <body>  
-            <a href="/browser/{{user.email}}">
-                <image class="logo" src="{{url_for('static',filename='ebaylogo.png')}}">
-            </a>
-            <nav class="navbar">
-                <a href="/browser/{{user.email}}">Home</a>
-                <a href="/account/{{user.email}}">Account</a>
-                <a href="/">Logout</a>
-            </nav>
-            {%with messages = get_flashed_messages(with_categories = true)%}    
-                {%if messages%}
-                    {%for category,message in messages%}
-                        {%if category=="error"%}
-                            <div class="alert_error alert" role = "alert">
-                                {{message}}
-                            </div>
-                        {% else %}
-                            <div class="alert_success alert" role = "alert">
-                                {{message}}
-                            </div>
-                        {%endif%}
-                    {%endfor%}
-                {%endif%}
-            {%endwith%}
+{% extends 'NavUser.html' %}
+{%block title%}Item{%endblock%}
+    {%block body%}
             <form class="inputForm item" method = "POST">
-                
-                {% for item in items %}
                     <div class="container">
                         <h2 class="auth_title">{{item.title}}</h1>
                         
@@ -52,8 +20,6 @@
                             <input type="submit" class="general_button" name = "submit" value="Sell">
                         {% endif %}
                     </div>
-                {% endfor %}
             </form>
-    </body>
-
-</html>
+        {%endblock%}
+        
