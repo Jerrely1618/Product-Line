@@ -135,8 +135,17 @@ def admin():
 def account(username):
     user = Users.query.filter_by(token=username).first()
     return render_template("account.html",user=user)
+   
     def changeBalance(user):
-        quantity = 1
+        quantity = ' '
+        userBalance = ' '
+        if (quantity >= 0):
+            userBalance += quantity
+        elif (userBalance > quantity):
+            userBalance -= quantity
+        else:
+            print("Not enough funds")
+           
 
     def submitItem():
         picture = ' '
@@ -144,22 +153,37 @@ def account(username):
         keyWords = ' '
         time = ''
         price = ''
+        newItem = item(picture, title, keyWords, time, price)
+        newApplication = itemApplication(item)
+        itemsApplications.append(newApplication)
 
-         
 
     def submitBid(item, user):
         bid = input("Enter Bid: ")
+        userBalance = ' '
+        itemBid = ' '
+        if (bid <= userBalance and  bid > itemBid):
+            itemBid = bid
+            itemBidder = user
     
-
     def complaint(user):
         complaintInfo = input("Enter your complaint: ")
+        userComplaint = ' '
+        userComplaint += 1
+        newComplaint = report
 
     def rate(user):
         rating = input("Enter rating between 1 & 5: ")
+        userRatings = ' '
+        userRatings.append(rating)
 
     def transactionHistory():
+        item1 = ' '
+        item2 = ' '
+        price1 = ' '
+        price2 = ' '
         transactionDict = {item1: price1, item2: price2}
-        print(transactionDict[i])
+        print(transactionDict)
 
     def accountInfo(user):
         userPassword = input("Enter Password: ")
@@ -174,19 +198,41 @@ def account(username):
 
     def changeInfo():
         newPassword = input("Enter New Password: ")
+        userPassword = ' '
         newPassword = userPassword
 
         newName = input("Enter New Name: ")
+        userName = ' '
         newName = userName
 
         newAddress = input("Enter New Address: ")
+        userAddress = ' '
         newAddress = userAddress
 
         newPhone = input("Enter New Phone Number: ")
+        userPhone = ' '
         newPhone = userPhone
 
         newCreditCardNumber = input("Enter New Credit Card Number: ")
+        userCreditCardNumber = ' '
         newCreditCardNumber = userCreditCardNumber
+
+        def browse():
+            word = ' '
+            itemTitle = ' '
+            for item in ItemsListed:
+                if(itemTitle == word):
+                  return item
+
+        def ordinaryApplication(userName, userAddress, userPhone, userPassword, userCreditCardNumber):
+            newUser = user(userName, userAddress, userPassword, userPhone, userCreditCardNumber)
+            NewApplication = userApplication(user)
+            itemsApplications.append(newApplication)
+
+        def submitReport(item)
+           reportInfo = ' '
+           newReport = reportsComplaints(reportInfo, item.user)
+           reportsComplaints.append(newReport)
 
 
 
