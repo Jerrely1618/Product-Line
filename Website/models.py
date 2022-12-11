@@ -2,7 +2,16 @@ from . import db
 from flask_login import UserMixin
 from datetime import datetime
 
-
+class Transaction_buyer(db.Model):
+    seller = db.Column(db.String,primary_key=True)
+    title = db.Column(db.String)
+    buyer = db.Column(db.String,db.ForeignKey('users.token'))
+    
+class Transaction_seller(db.Model):
+    buyer = db.Column(db.String,primary_key = True)
+    title = db.Column(db.String)
+    seller = db.Column(db.String,db.ForeignKey('users.token'))
+    
 class UserApplication(db.Model):
     name = db.Column(db.String(50))
     email = db.Column(db.String(50),unique=True,primary_key = True)
@@ -16,10 +25,10 @@ class ItemsApplication(db.Model):
     keywords = db.Column(db.String(50))
     time = db.Column(db.String(50))
     priceRange = db.Column(db.String(50))
-    user = db.Column(db.String,db.ForeignKey('users.email'))
+    user = db.Column(db.String,db.ForeignKey('users.token'))
 
 class Complaints(db.Model,UserMixin):
-    user = db.Column(db.String(50),db.ForeignKey('users.email'))
+    user = db.Column(db.String(50),db.ForeignKey('users.token'))
     description = db.Column(db.String(50),primary_key=True)
     user_complainer = db.Column(db.String)
     
@@ -36,16 +45,20 @@ class Items(db.Model):
     price = db.Column(db.String)
     user_bidder = db.Column(db.String)
     reports = db.relationship('Reports')
-    user = db.Column(db.String,db.ForeignKey('users.email'))
+    user = db.Column(db.String,db.ForeignKey('users.token'))
     
 class Users(db.Model,UserMixin):
     token = db.Column(db.String,unique=True,primary_key=True)
+    super = db.Column(db.Boolean,unique=False,default=False)
     name = db.Column(db.String(50))
     email = db.Column(db.String(50),unique=True)
     password = db.Column(db.String(50))
     address = db.Column(db.String(50))
     phone = db.Column(db.String(50),unique=True)
     credit_card = db.Column(db.String(50))
+    rating = db.Column(db.Integer)
+    sales = db.relationship("Transaction_seller")
+    purchases = db.relationship("Transaction_buyer")
     items = db.relationship('Items')
     complaints = db.relationship('Complaints')
     

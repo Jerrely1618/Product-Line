@@ -16,7 +16,7 @@
                             <input type="submit" class="general_button" name = "submit" value="Report Item">
                             <input type="submit" class="general_button" name = "submit" value="Complaint about User">
                             <input type="text" class="bid_label" name="description" id = "description" autocomplete="off" placeholder="Complaint/Report description">
-                        {%else%}
+                        {%elif item.user_bidder != "Dummy"%}
                             <input type="submit" class="general_button" name = "submit" value="Sell">
                         {% endif %}
                     </div>

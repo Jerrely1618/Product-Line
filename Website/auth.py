@@ -1,7 +1,7 @@
 #Login/Sign_up pages
 
 from flask import Blueprint,render_template,request,flash,redirect,url_for
-from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints
+from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints,Transaction_buyer,Transaction_seller
 from . import db
 import base64 #src = https://stackoverflow.com/questions/2323128/convert-string-in-base64-to-image-and-save-on-filesystem
 import secrets
@@ -19,14 +19,19 @@ def browser(username):
         return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
     itemsList = ItemsListed.query.order_by(ItemsListed.time)
     return render_template("browser.html",items=itemsList,user=user)
+@verify_page.route('/history/<username>',methods=['POST','GET'])
+def history(username):
+    user = Users.query.filter_by(token=username).first()
+    transactionSell = user.sales
+    transactionBuy = user.purchases
+    return render_template("history.html",purchases=transactionBuy,sales=transactionSell,user=user)
 
 @verify_page.route('/login',methods=['POST','GET'])
 def login():
     if request.method=="POST":
         username = request.form['username']
         password = request.form['password']
-        user = Users.query.filter_by(email=username).first()  
-        print(user)
+        user = Users.query.filter_by(email=username).first() 
         if user:
             if user.password != password:
                 flash("User or password do not matched with any of our records")   
@@ -40,7 +45,8 @@ def login():
     # creditcard="3213124121"
     # address = "Brooklyna"
     # token = generateToken()
-    # tryUser = Users(token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # super = False
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
     # db.session.add(tryUser)
     # db.session.commit()
     return render_template("login.html")
@@ -65,7 +71,7 @@ def itemUser(titleName,username):
         if request.form["submit"] == "Bid":
             if (float)(it.price) < (float)(request.form["bid"]):
                 it.price = request.form["bid"]
-                it.userBidder = user.email
+                it.user_bidder = user.token
                 db.session.commit()
                 flash("Bid of $"+request.form["bid"]+" submitted",category = "success")
             else:
@@ -76,6 +82,10 @@ def itemUser(titleName,username):
             db.session.commit()
             flash("Reported.",category="success")
         elif request.form["submit"]=="Sell":
+            newTransactionBuy = Transaction_buyer(title=it.title,seller = user.token,buyer = it.user_bidder)
+            newTransactionSell = Transaction_seller(title=it.title,seller = user.token,buyer = it.user_bidder)
+            db.session.add(newTransactionBuy)
+            db.session.add(newTransactionSell)
             db.session.delete(it)
             db.session.commit()
             flash("Item sold.",category = "success")
@@ -85,6 +95,7 @@ def itemUser(titleName,username):
             db.session.add(newComplaint)
             db.session.commit()
             flash("Complaint Submitted.",category="success")
+    print(it.user_bidder)
     return render_template("itemUser.html",item=it,img=image,user=user)
 
 @verify_page.route('/newItem/<username>',methods=['POST','GET'])

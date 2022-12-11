@@ -13,7 +13,12 @@
             </a>
             <nav class="navbar">
                 <a href="/browser/{{user.token}}">Home</a>
-                <a href="/account/{{user.token}}">Account</a>
+                {% if user.super == False %}
+                    <a href="/account/{{user.token}}">Account</a>
+                {%else%}
+                    <a href="/admin/{{user.token}}">Admin</a>
+                {% endif %}
+                
                 <a href="/">Logout</a>
             </nav>
             {%with messages = get_flashed_messages(with_categories = true)%}    
