@@ -1,0 +1,50 @@
+{% extends 'NavBase.html' %} 
+{%block title%} Change Info {%endblock%}
+
+{%block body%} 
+<div class="auth">
+    <form class = "inputForm" method="POST">
+        <div>
+            <h1 class = "auth_title">Change Account Info</h1>
+            <div class="section">    
+                <div class="section_auth">
+                    <label for="new email">New Email </label>
+                    <input type="new email" name="new email" id="new email" autocomplete="off" placeholder="Enter new email: "></input> 
+                
+                </div>
+                <div class="section_auth">
+                    <label for="new email_ver">Confirm New Email </label>
+                    <input type="new email" name="new email_ver" id="new email_ver" autocomplete="off" placeholder="Confirm new email: "></input>
+                
+                </div>
+                <div class="section_auth">
+                    <label for = "new password">New Password </label>
+                    <input type="new password" name="new password" id="new password" autocomplete="off" placeholder="Enter new password: "></input>
+                    
+                </div>
+                <div class="section_auth">
+                    <label for = "new password_ver">Confirm New Password </label>
+                    <input type="new password" name="new password_ver" id="new password_ver" autocomplete="off" placeholder="Confirm new password: "></input>
+                    
+                </div>
+                <div class="section_auth">
+                    <label for = "new phone">New Phone Number </label>
+                    <input type="text" name = "new phone" id = "new phone" placeholder="Enter new phone number: " autocomplete="off"></input>
+                </div>
+                    <div class="section_auth">        
+                    <label for = "new address">New Address</label>
+                    <input type="text" name="new address" id="new address" placeholder="Enter new address: " autocomplete="off"></input>
+                </div>
+                <div class="section_auth">
+                    <label for = "new Credit_card">New Credit Card Number</label>
+                    <input type="text" name="new Credit_card" id="new Credit_card" placeholder="Enter new number: " autocomplete="off"></input> 
+                </div>
+                <div class="section_auth">    
+                    <label for="new name">New Name</label>
+                    <input type="text" name="new name" autocomplete="off" id="new name" placeholder="Enter new name: "></input>  
+            </div>
+        </div>
+        <input class="general_button" type="submit" value="Submit Changes"></input>
+    </form>
+</div>
+{%endblock%}

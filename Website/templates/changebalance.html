@@ -1,0 +1,17 @@
+{% extends 'NavBase.html' %} 
+{%block title%} Change Balance {%endblock%}
+
+{%block body%} 
+<div class="auth">
+    <form class = "inputForm" method="POST">
+        <div>
+            <h1 class = "auth_title">Change Balance</h1>
+            <div class="section">    
+                <div class="section_auth">
+                   <label for="balance">Balance </label>
+                   <input type="balance" name="balance" id="balance" autocomplete="off" placeholder="Enter Amount: "></input> 
+
+                </div>
+
+        </div>       
+        <input class="general_button" type="submit" value="Submit"></input>
