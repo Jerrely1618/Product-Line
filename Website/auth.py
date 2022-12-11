@@ -14,17 +14,53 @@ def generateToken() -> str:
 def browser(username):
     user = Users.query.filter_by(token=username).first()
     if request.method=="POST":
-        searchItem = request.form["searchItem"]
-        itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
-        return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
+        if "searchItem" in request.form.keys():
+            searchItem = request.form["searchItem"]
+            print(searchItem)
+            itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
+            return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
+        elif "submit" in request.form.keys() and request.form["submit"] == "Add Item":
+            return redirect("/newItem/"+user.token)
+        else:
+            itemsList = ItemsListed.query.filter_by(user=user.token).order_by(ItemsListed.time)
+            return render_template("browser.html",items=itemsList,user=user)
     itemsList = ItemsListed.query.order_by(ItemsListed.time)
     return render_template("browser.html",items=itemsList,user=user)
+
 @verify_page.route('/history/<username>',methods=['POST','GET'])
 def history(username):
     user = Users.query.filter_by(token=username).first()
+    choice="purchase"
+    if(request.method=="POST"):
+        if request.form["submit"] == "Sales":
+            choice = "sale"
+        else:
+            choice = "purchase"
     transactionSell = user.sales
     transactionBuy = user.purchases
-    return render_template("history.html",purchases=transactionBuy,sales=transactionSell,user=user)
+    return render_template("history.html",choice=choice,purchases=transactionBuy,sales=transactionSell,user=user)
+@verify_page.route('/transaction/<side>/<item>/<username>',methods=['POST','GET'])
+def transaction(side,item,username):
+    user = Users.query.filter_by(token=username).first()
+    buyerTrans = Transaction_buyer.query.filter_by(title=item).first()
+    sellerTrans = Transaction_seller.query.filter_by(title=item).first()
+    
+    if side == "Buyer":
+        if request.method=="POST":
+            rating = request.form["quantity"]
+            userRated = Users.query.filter_by(token=sellerTrans.seller).first()
+            userRated.rating = (userRated.rating + (int)(rating)) // (len(userRated.purchases) + len(userRated.sales))
+            flash("Rating Submitted",category="success")
+            return redirect("/browser/"+user.token)
+        return render_template("transaction.html",transaction=buyerTrans,user=user)
+    else:
+        if request.method=="POST":
+            rating = request.form["quantity"]
+            userRated = Users.query.filter_by(token=sellerTrans.seller).first()
+            userRated.rating = (userRated.rating + (int)(rating)) // (len(userRated.purchases) + len(userRated.sales))
+            flash("Rating Submitted",category="success")
+            return redirect("/browser/"+user.token)
+        return render_template("transaction.html",transaction=sellerTrans,user=user)
 
 @verify_page.route('/login',methods=['POST','GET'])
 def login():
@@ -44,6 +80,18 @@ def login():
     # phone = "213809128645463"
     # creditcard="3213124121"
     # address = "Brooklyna"
+    # token = generateToken()
+    # super = False
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # db.session.add(tryUser)
+    # db.session.commit()
+    
+    # username = "random98@gmail.com"
+    # password = "random98"
+    # name = "Rando"
+    # phone = "6545"
+    # creditcard="99888"
+    # address = "Queena"
     # token = generateToken()
     # super = False
     # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
@@ -82,8 +130,9 @@ def itemUser(titleName,username):
             db.session.commit()
             flash("Reported.",category="success")
         elif request.form["submit"]=="Sell":
-            newTransactionBuy = Transaction_buyer(title=it.title,seller = user.token,buyer = it.user_bidder)
-            newTransactionSell = Transaction_seller(title=it.title,seller = user.token,buyer = it.user_bidder)
+            buyer = Users.query.filter_by(token=it.user).first()
+            newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
+            newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
             db.session.add(newTransactionBuy)
             db.session.add(newTransactionSell)
             db.session.delete(it)
