@@ -1,1 +1,31 @@
 {% extends 'NavUser.html' %}
+{% block title %}History{%endblock%}
+{% block body%}
+<h2>Transaction history</h2>
+
+<form method = "POST">
+    <input type="submit" name="submit" value="Sales"></input>
+    <input type="submit" name="submit" value="Purchases"></input>
+</form>
+{% if choice == "purchase" %}
+    {% for purchase in purchases %}
+        <div>
+                <a href="/transaction/Buyer/{{sale.title}}/{{user.token}}">
+                    <h4>{{purchase.title}}</h4>
+                    <h5>{{purchase.buyer_name}}</h5>
+                    <p>Sold on: {{purchase.time}}</p>
+                </a>
+        </div>
+    {% endfor %}
+{% else %}
+    {% for sale in sales %}
+        <div>
+                <a href="/transaction/Seller/{{sale.title}}/{{user.token}}">
+                    <h4>{{sale.title}}</h4>
+                    <h5>{{sale.buyer_name}}</h5>
+                    <p>Sold on: {{sale.time}}</p>
+                </a>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock%}

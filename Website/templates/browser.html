@@ -4,8 +4,12 @@
             <h2 class="auth_title welcome"> Welcome {{user.name}}!</h2>
             <form class="search_bar" method="POST">
                 <input type="text" id="searchItem" name="searchItem" placeholder="Search...">
-                
-                <a href="/newItem/{{user.token}}">Add Item</a>
+            </form>
+            <form method = "POST">
+                <input type="submit" id = "Add" name="submit" value="Add Item"></input>
+                <input type="submit" id = "MyItems" name="submit" value="My Items"></input>
+            <form>
+
             </form>
             <div class="items_list">
                 {%if items.count() == 0%}
