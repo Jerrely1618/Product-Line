@@ -104,13 +104,15 @@ def itemInput(username):
 @verify_page.route('/admin',methods=['POST','GET'])
 def admin():
     def ProcessApplications()->None:
+        guestApplication = ' '
         for application in guestApplication:
            if (application.requirements == True):
                Users.append(application.user)
              
 
     def ProcessItems()->None:
-        for application in ItemApplication:
+        itemApplication = ' '
+        for application in itemApplication:
             if (application.requirements == True):
                ItemsListed.append(application.item)
     
@@ -124,6 +126,7 @@ def admin():
         reportsComplaints = len(reportsComplaints)
         usersTotal = len(Users)
         itemsApplications = len(itemsApplications)
+        items = ' '
         itemsTotal = len(items)
         userApplications = len(userApplications)
         print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
@@ -229,7 +232,7 @@ def account(username):
             NewApplication = userApplication(user)
             itemsApplications.append(newApplication)
 
-        def submitReport(item)
+        def submitReport(item):
            reportInfo = ' '
            newReport = reportsComplaints(reportInfo, item.user)
            reportsComplaints.append(newReport)
