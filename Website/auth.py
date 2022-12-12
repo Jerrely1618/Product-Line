@@ -166,20 +166,24 @@ def admin():
     def ProcessApplications()->None:
         guestApplication = ' '
         for application in guestApplication:
-           if (application.requirements == True):
-               Users.append(application.user)
+            if (application.requirements == True):
+                Users.append(application.user)
+            else:
+                print("Item Application Denied")
              
 
     def ProcessItems()->None:
         itemApplication = ' '
         for application in itemApplication:
             if (application.requirements == True):
-               ItemsListed.append(application.item)
+                ItemsListed.append(application.item)
+            else:
+                print("Item Application Denied")
     
 
     def WarnUser(user)->None:	
-       if(Users.complaints>=1):
-          print('User warned')
+        if(Users.complaints>=1):
+            print('User warned')
     
 
     def Statistics()->None:
@@ -197,7 +201,7 @@ def admin():
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):
     user = Users.query.filter_by(token=username).first()
-    return render_template("account.html",user=user)
+    
    
     def changeBalance(user):
         quantity = ' '
@@ -217,6 +221,8 @@ def account(username):
         time = ''
         price = ''
         newItem = item(picture, title, keyWords, time, price)
+        itemApplication = ' '
+        itemsApplications = ' '
         newApplication = itemApplication(item)
         itemsApplications.append(newApplication)
 
@@ -231,6 +237,7 @@ def account(username):
     
     def complaint(user):
         complaintInfo = input("Enter your complaint: ")
+        report = ' '
         userComplaint = ' '
         userComplaint += 1
         newComplaint = report
@@ -285,21 +292,20 @@ def account(username):
             itemTitle = ' '
             for item in ItemsListed:
                 if(itemTitle == word):
-                  return item
+                    return item
 
         def ordinaryApplication(userName, userAddress, userPhone, userPassword, userCreditCardNumber):
             newUser = user(userName, userAddress, userPassword, userPhone, userCreditCardNumber)
-            NewApplication = userApplication(user)
-            itemsApplications.append(newApplication)
+            NewApplication = UserApplication(user)
+            itemsApplications = ' '
+            itemsApplications.append(NewApplication)
 
         def submitReport(item):
-           reportInfo = ' '
-           newReport = reportsComplaints(reportInfo, item.user)
-           reportsComplaints.append(newReport)
+            reportInfo = ' '
+            reportsComplaints = ' '
+            newReport = reportsComplaints(reportInfo, item.user)
+            reportsComplaints.append(newReport)
 
-
-
-    
     return render_template("account.html")
 
 @verify_page.route('/sign-up',methods=['POST','GET'])

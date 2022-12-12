@@ -5,10 +5,61 @@
 <h1>Admin</h1>
 </div>
 <input class="general_button" type="process app" value="Process Applications"></input>
+   </div>
+   <input class="general_button" type="accept application" value="Accept OU Application"></input>
+   </div>
+   <input class="general_button" type="deny application" value="Deny OU Application"></input>
 </div>
+
 <input class="general_button" type="process item" value="Process Items"></input>
+   </div>
+   <input class="general_button" type="accept item app" value="Accept Item Application"></input>
+   </div>
+   <input class="general_button" type="deny item app" value="Deny Item Application"></input>
 </div>
+
 <input class="general_button" type="warn user" value="Warn User"></input>
+  <div class="auth">
+    <form class = "inputForm" method="POST">
+        <div>
+            <h1 class = "auth_title">Warn User</h1>
+            <div class="section">    
+                <div class="section_auth">
+                    <label for="warning">Warning </label>
+                    <input type="warning" name="warning" id="warning" autocomplete="off" placeholder="Enter Warning Message: "></input> 
+            </div>
+        </div>
+        <input class="general_button" type="send warning" value="Send Warning"></input>
+     </form>     
 </div>
+
 <input class="general_button" type="statistics" value="Statistics"></input>
+  <div class="auth">
+    <form class = "inputForm" method="POST">
+        <div>
+            <h1 class = "auth_title">Statistics</h1>
+            <div class="section">    
+                <div class="section_auth">
+                    <label for="total users">Total Users </label>
+                    <input type="total users" name="total users" id="total users" autocomplete="off" placeholder="Enter Total Users: "></input> 
+                
+                </div>
+                <div class="section_auth">
+                    <label for="total items">Total Items</label>
+                    <input type="total items" name="total items" id="total items" autocomplete="off" placeholder="Enter Total Items: "></input>
+                
+                </div>
+                <div class="section_auth">
+                    <label for = "total user apps">Total UserApplications </label>
+                    <input type="total user apps" name="total user apps" id="total user apps" autocomplete="off" placeholder="Enter Total UserApplications: "></input>
+                    
+                </div>
+                <div class="section_auth">
+                    <label for = "total item apps">Total ItemApplications </label>
+                    <input type="total item apps" name="total item apps" id="total item apps" autocomplete="off" placeholder="Enter Total ItemApplications: "></input>
+             </div>
+        </div>
+        <input class="general_button" type="submit" value="Submit"></input>
+    </form>
+</div>
 {%endblock%}
