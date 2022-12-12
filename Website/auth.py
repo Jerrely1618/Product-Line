@@ -13,6 +13,7 @@ def generateToken() -> str:
 @verify_page.route('/browser/<username>',methods=['POST','GET'])
 def browser(username):
     user = Users.query.filter_by(token=username).first()
+    print(user)
     if request.method=="POST":
         if "searchItem" in request.form.keys():
             searchItem = request.form["searchItem"]
@@ -161,8 +162,8 @@ def itemInput(username):
         db.session.commit()
     return render_template('inputItem.html',user=user)
     
-@verify_page.route('/admin',methods=['POST','GET'])
-def admin():
+@verify_page.route('/admin/<username>',methods=['POST','GET'])
+def admin(username):
     def ProcessApplications()->None:
         guestApplication = ' '
         for application in guestApplication:
@@ -201,7 +202,8 @@ def admin():
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):
     user = Users.query.filter_by(token=username).first()
-    
+    print(user)
+    return render_template("account.html",user=user)
    
     def changeBalance(user):
         quantity = ' '
@@ -306,7 +308,7 @@ def account(username):
             newReport = reportsComplaints(reportInfo, item.user)
             reportsComplaints.append(newReport)
 
-    return render_template("account.html")
+    
 
 @verify_page.route('/sign-up',methods=['POST','GET'])
 def sign_up():
