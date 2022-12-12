@@ -1,13 +1,22 @@
-{% extends 'Navuser.html' %} 
+{% extends 'NavUser.html' %} 
 {%block title%} Account {%endblock%}
 
 {%block body%}
 <h2>Account</h2>
+<div>
+<p>Name: {{user.name}}</p>
+<p>Address: {{user.address}}</p>
+<p>Email: {{user.email}}</p>
+<p>Phone: {{user.phone}}</p>
+<p>Rating: {{user.rating}}</p>
 </div>
-<input class="general_button" type="button" value="Change Balance"></input>
+<div>
+<a href= "/balance/{{user.token}}"><input class="general_button" type="button" value="Change Balance"></input></a> 
 </div>
+<div>
 <a href= "/history/{{user.token}}"> <input class="general_button" type="button" value="Transaction History"></input> </a> 
 </div>
-<input class="general_button" type="button" value="Change Info"></input>
+<div>
+<a href= "/ChangeInfo/{{user.token}}"><input class="general_button" type="button" value="Change Info"></input></a> 
 </div>
 {%endblock%}

@@ -1,7 +1,7 @@
 #Login/Sign_up pages
 
 from flask import Blueprint,render_template,request,flash,redirect,url_for
-from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints,Transaction_buyer,Transaction_seller
+from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints,Transaction_buyer,Transaction_seller,ItemsApplication
 from . import db
 import base64 #src = https://stackoverflow.com/questions/2323128/convert-string-in-base64-to-image-and-save-on-filesystem
 import secrets
@@ -98,6 +98,18 @@ def login():
     # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
     # db.session.add(tryUser)
     # db.session.commit()
+    
+    # username = "adminrand@gmail.com"
+    # password = "random"
+    # name = "Rambo"
+    # phone = "651312345"
+    # creditcard="99532525888"
+    # address = "Bronxena"
+    # token = generateToken()
+    # super = True
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # db.session.add(tryUser)
+    # db.session.commit()
     return render_template("login.html")
 
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
@@ -119,10 +131,13 @@ def itemUser(titleName,username):
     if request.method == "POST":
         if request.form["submit"] == "Bid":
             if (float)(it.price) < (float)(request.form["bid"]):
-                it.price = request.form["bid"]
-                it.user_bidder = user.token
-                db.session.commit()
-                flash("Bid of $"+request.form["bid"]+" submitted",category = "success")
+                if((float)(request.form["bid"])<=user.balance):
+                    it.price = request.form["bid"]
+                    it.user_bidder = user.token
+                    db.session.commit()
+                    flash("Bid of $"+request.form["bid"]+" submitted",category = "success")
+                else:
+                    flash("Not enough money",category="error")
             else:
                 flash("Too little.",category="error")
         elif request.form["submit"] == "Report Item":
@@ -134,6 +149,7 @@ def itemUser(titleName,username):
             buyer = Users.query.filter_by(token=it.user).first()
             newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
             newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
+            user.balance+=(int)(it.price)
             db.session.add(newTransactionBuy)
             db.session.add(newTransactionSell)
             db.session.delete(it)
@@ -161,9 +177,10 @@ def itemInput(username):
         db.session.add(newItem)
         db.session.commit()
     return render_template('inputItem.html',user=user)
-    
+
 @verify_page.route('/admin/<username>',methods=['POST','GET'])
 def admin(username):
+    user = Users.query.filter_by(token=username).first()
     def ProcessApplications()->None:
         guestApplication = ' '
         for application in guestApplication:
@@ -196,8 +213,31 @@ def admin(username):
         userApplications = len(userApplications)
         print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
          + userApplications + "Total item applications: " + itemsApplications)
-    return render_template("admin.html")
+    return render_template("admin.html",user=user)
     
+@verify_page.route('/procApp/<username>',methods=['POST','GET'])
+def procApp(username):
+    user = Users.query.filter_by(token=username).first()
+    return render_template("admin.html",user=user)
+ 
+@verify_page.route('/procItem/<username>',methods=['POST','GET'])
+def procItem(username):
+    user = Users.query.filter_by(token=username).first()
+    return render_template("admin.html",user=user)
+ 
+@verify_page.route('/warnings/<username>',methods=['POST','GET'])
+def warnings(username):
+     user = Users.query.filter_by(token=username).first()
+     return render_template("admin.html",user=user)
+ 
+@verify_page.route('/stats/<username>',methods=['POST','GET'])
+def stats(username):
+     user = Users.query.filter_by(token=username).first()
+     itemsList = ItemsListed.query.order_by(ItemsListed.time)
+     userList = Users.query.order_by(Users.name)
+     userApps = UserApplication.query.order_by(UserApplication.name)
+     itemsApps = ItemsApplication.query.order_by(ItemsApplication.title)
+     return render_template("Stats.html",user=user,users=userList.count(),itemsApp=itemsApps.count(),userApp = userApps.count(),items = itemsList.count())
  
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):
@@ -308,8 +348,20 @@ def account(username):
             newReport = reportsComplaints(reportInfo, item.user)
             reportsComplaints.append(newReport)
 
+@verify_page.route('/balance/<username>',methods=['POST','GET'])
+def balance(username):
+    user = Users.query.filter_by(token=username).first()
+    if request.method=="POST":
+        add = request.form["balance"]
+        user.balance+=(int)(add)
+        db.session.commit()
+    return render_template("changebalance.html",user=user)
     
-
+@verify_page.route('/ChangeInfo/<username>',methods=['POST','GET'])
+def ChangeInfo(username):
+    user = Users.query.filter_by(token=username).first()
+    return render_template("changeinfo.html",user=user)
+    
 @verify_page.route('/sign-up',methods=['POST','GET'])
 def sign_up():
     if request.method=="POST":

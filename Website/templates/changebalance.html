@@ -1,17 +1,21 @@
-{% extends 'NavBase.html' %} 
+{% extends 'NavUser.html' %} 
 {%block title%} Change Balance {%endblock%}
 
 {%block body%} 
 <div class="auth">
     <form class = "inputForm" method="POST">
-        <div>
             <h1 class = "auth_title">Change Balance</h1>
             <div class="section">    
                 <div class="section_auth">
-                   <label for="balance">Balance </label>
-                   <input type="balance" name="balance" id="balance" autocomplete="off" placeholder="Enter Amount: "></input> 
+                   <p>Current balance: ${{user.balance}}</p>
+                </div>
+            </div>   
+            <div class="section">    
+                <div class="section_auth">
+                   <label for="balance">Enter Balance: </label>
+                   <input type="number" name="balance" id="balance" autocomplete="off" placeholder="Enter Amount: "></input> 
 
                 </div>
-
-        </div>       
+            </div>       
         <input class="general_button" type="submit" value="Submit"></input>
+{%endblock%}

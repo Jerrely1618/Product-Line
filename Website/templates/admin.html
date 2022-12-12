@@ -1,15 +1,20 @@
-{% extends 'NavBase.html' %} 
+{% extends 'NavUser.html' %} 
 {%block title%} Admin Panel {%endblock%}
 
 {%block body%} 
 <h1>Admin</h1>
-</div>
-<input class="general_button" type="process app" value="Process Applications"></input>
-</div>
-<input class="general_button" type="process item" value="Process Items"></input>
-</div>
-<input class="general_button" type="warnings" value="Warnings"></input>
-</div>
-<input class="general_button" type="statistics" value="Statistics"></input>
-</div>
+
+<a href = "/procApp/{{user.token}}">
+<input class="general_button" type="submit" name= "Process Applications" value="Process Applications"></input>
+</a>
+<a href = "/procItems/{{user.token}}">
+<input class="general_button" type="submit" name= "Process Items" value="Process Items"></input>
+</a>
+<a href = "/warnings/{{user.token}}">
+<input class="general_button" type="submit" name= "Warnings" value="Warnings"></input>
+</a>
+<a href = "/stats/{{user.token}}"">
+<input class="general_button" type="submit" name= "Statistics" value="Statistics"></input>
+</a>
+
 {%endblock%}
