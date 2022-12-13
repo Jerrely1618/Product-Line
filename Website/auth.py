@@ -16,8 +16,9 @@ def browser(username):
     if request.method=="POST":
         if "searchItem" in request.form.keys():
             searchItem = request.form["searchItem"]
-            print(searchItem)
             itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
+            if itemsList.count()==0:
+                itemsList = ItemsListed.query.filter_by(price=searchItem).order_by(ItemsListed.time)
             return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
         elif "submit" in request.form.keys() and request.form["submit"] == "Add Item":
             return redirect("/newItem/"+user.token)
@@ -93,42 +94,6 @@ def login():
             else:
                 return redirect('/browser/'+user.token)
         flash("User or password do not matched with any of our records")
-        
-    # username = "Randy@gmail.com"
-    # password = "Randy"
-    # name = "Randy"
-    # phone = "213809128645463"
-    # creditcard="3213124121"
-    # address = "Brooklyna"
-    # token = generateToken()
-    # super = False
-    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
-    # db.session.add(tryUser)
-    # db.session.commit()
-    
-    # username = "Max@gmail.com"
-    # password = "Max"
-    # name = "Max"
-    # phone = "6545"
-    # creditcard="99888"
-    # address = "Queena"
-    # token = generateToken()
-    # super = False
-    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
-    # db.session.add(tryUser)
-    # db.session.commit()
-    
-    # username = "admin@gmail.com"
-    # password = "admin"
-    # name = "Rambo"
-    # phone = "651312345"
-    # creditcard="99532525888"
-    # address = "Bronxena"
-    # token = generateToken()
-    # super = True
-    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
-    # db.session.add(tryUser)
-    # db.session.commit()
     return render_template("login.html")
 
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
