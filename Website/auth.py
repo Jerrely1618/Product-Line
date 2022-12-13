@@ -1,7 +1,7 @@
 #Login/Sign_up pages
 
 from flask import Blueprint,render_template,request,flash,redirect,url_for
-from .models import UserApplication,Items as ItemsListed,Users,Reports,Complaints,Transaction_buyer,Transaction_seller,ItemsApplication
+from .models import UserApplication,Buyers,Items as ItemsListed,Users,Reports,Complaints,Transaction_buyer,Transaction_seller,ItemsApplication
 from . import db
 import base64 #src = https://stackoverflow.com/questions/2323128/convert-string-in-base64-to-image-and-save-on-filesystem
 import secrets
@@ -19,6 +19,8 @@ def browser(username):
             itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
             if itemsList.count()==0:
                 itemsList = ItemsListed.query.filter_by(price=searchItem).order_by(ItemsListed.time)
+            if itemsList.count()==0:
+                itemsList = ItemsListed.query.filter_by(keywords=searchItem).order_by(ItemsListed.time)
             return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
         elif "submit" in request.form.keys() and request.form["submit"] == "Add Item":
             return redirect("/newItem/"+user.token)
@@ -94,6 +96,55 @@ def login():
             else:
                 return redirect('/browser/'+user.token)
         flash("User or password do not matched with any of our records")
+
+    # username = "Randy@gmail.com"
+    # password = "Randy"
+    # name = "Randy"
+    # phone = "213809128645463"
+    # creditcard="3213124121"
+    # address = "Brooklyna"
+    # token = generateToken()
+    # super = False
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # db.session.add(tryUser)
+    # db.session.commit()
+
+    
+    # username = "Max@gmail.com"
+    # password = "Max"
+    # name = "Max"
+    # phone = "6545"
+    # creditcard="99888"
+    # address = "Queena"
+    # token = generateToken()
+    # super = False
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # db.session.add(tryUser)
+    # db.session.commit()
+    
+    # username = "Lucas@gmail.com"
+    # password = "Lucas"
+    # name = "Lucas"
+    # phone = "624234545"
+    # creditcard="123123"
+    # address = "Statenea"
+    # token = generateToken()
+    # super = False
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # db.session.add(tryUser)
+    # db.session.commit()
+
+    # username = "admin@gmail.com"
+    # password = "admin"
+    # name = "Rambo"
+    # phone = "651312345"
+    # creditcard="99532525888"
+    # address = "Bronxena"
+    # token = generateToken()
+    # super = True
+    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+    # db.session.add(tryUser)
+    # db.session.commit()
     return render_template("login.html")
 
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
@@ -118,6 +169,15 @@ def itemUser(titleName,username):
                 if((float)(request.form["bid"])<=user.balance):
                     it.price = request.form["bid"]
                     it.user_bidder = user.token
+                    buyers = Buyers.query.filter_by(title=it.title)
+                    for buyer in buyers:
+                        if user.name == buyer.user_name:
+                            buyer.bid=request.form["bid"]
+                            db.session.commit()
+                            flash("Bid of $"+request.form["bid"]+" submitted",category = "success")
+                            return redirect("/browser/"+user.token)
+                    newBuyer = Buyers(title=it.title,user_name=user.name,bid=request.form["bid"])
+                    db.session.add(newBuyer)
                     db.session.commit()
                     flash("Bid of $"+request.form["bid"]+" submitted",category = "success")
                 else:
@@ -125,23 +185,49 @@ def itemUser(titleName,username):
             else:
                 flash("Too little.",category="error")
         elif request.form["submit"] == "Report Item":
-            newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user.token)
+            newReport = Reports(title=it.title,description = request.form["description"],user_complainer=user.name)
             db.session.add(newReport)
             db.session.commit()
             flash("Reported.",category="success")
-        elif request.form["submit"]=="Sell":
-            buyer = Users.query.filter_by(token=it.user_bidder).first()
-            newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
-            newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
-            user.balance+=(int)(it.price)
-            buyer.balance-=(int)(it.price)
-            db.session.add(newTransactionBuy)
-            db.session.add(newTransactionSell)
-            db.session.delete(it)
-            db.session.commit()
-            flash("Item sold.",category = "success")
-            return redirect("/browser/"+user.token)
-    return render_template("itemUser.html",item=it,img=image,user=user)
+        else:
+            sentence = request.form["submit"]
+            words = sentence.split()
+            buyer_name = words[2]
+            buyer = Users.query.filter_by(name=buyer_name).first()
+            cost = words[5]
+            if "reason" in request.form.keys():
+                reason = request.form["reason"]
+                if buyer.balance >= (int)(cost):
+                    newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
+                    newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
+                    user.balance+=(int)(it.price)
+                    buyer.balance-=(int)(it.price)
+                    db.session.add(newTransactionBuy)
+                    db.session.add(newTransactionSell)
+                    db.session.delete(it)
+                    db.session.commit()
+                    flash("Item sold.",category = "success")
+                    return redirect("/browser/"+user.token)
+                else:
+                    flash("User has no funds.",category="error")
+                    return redirect("/browser/"+user.token)
+            if cost < it.price:
+                return render_template("itemUser.html",item=it,img=image,user=user,inst="reason",buyer=buyer,total = cost)
+            if buyer.balance >= cost:
+                newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
+                newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
+                user.balance+=(int)(it.price)
+                buyer.balance-=(int)(it.price)
+                db.session.add(newTransactionBuy)
+                db.session.add(newTransactionSell)
+                db.session.delete(it)
+                db.session.commit()
+                flash("Item sold.",category = "success")
+                return redirect("/browser/"+user.token)
+            else:
+                flash("User has no funds.",category="error")
+                return redirect("/browser/"+user.token)
+    return render_template("itemUser.html",item=it,img=image,user=user,inst="none")
 
 @verify_page.route('/newItem/<username>',methods=['POST','GET'])
 def itemInput(username):

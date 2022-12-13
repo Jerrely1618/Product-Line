@@ -16,7 +16,15 @@
                             <input type="submit" class="general_button" name = "submit" value="Report Item">
                             <input type="text" class="bid_label" name="description" id = "description" autocomplete="off" placeholder="Report description">
                         {%elif item.user_bidder != "Dummy"%}
-                            <input type="submit" class="general_button" name = "submit" value="Sell">
+                            {% if inst == "reason" %}
+                                <p>Provide reason: </p>
+                                <input type="text" name = "reason" ></input>
+                                <input type="submit" class="general_button" name = "submit" value="Sell to {{buyer.name}} for $ {{total}}"></input>
+                            {% else %}
+                                {% for buyer in item.buyers %}
+                                    <input type="submit" class="general_button" name = "submit" value="Sell to {{buyer.user_name}} for $ {{buyer.bid}}"></input>
+                                {% endfor %}
+                            {% endif %}
                         {% endif %}
                     </div>
             </form>
