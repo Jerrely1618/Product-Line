@@ -32,6 +32,7 @@ class ItemsApplication(db.Model):
     title = db.Column(db.String(50),unique=True,primary_key = True)
     keywords = db.Column(db.String(50))
     time = db.Column(db.DateTime,default=datetime.utcnow)
+    img = db.Column(db.Text)
     priceRange = db.Column(db.String(50))
     user = db.Column(db.String,db.ForeignKey('users.token'))
 
@@ -65,6 +66,7 @@ class Users(db.Model,UserMixin):
     phone = db.Column(db.String(50),unique=True)
     credit_card = db.Column(db.String(50))
     rating = db.Column(db.Integer,default = 0)
+    totalRatings = db.Column(db.Integer,default = 0)
     balance = db.Column(db.Integer,default = 0)
     sales = db.relationship("Transaction_seller")
     purchases = db.relationship("Transaction_buyer")

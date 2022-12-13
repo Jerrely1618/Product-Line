@@ -13,12 +13,12 @@ def generateToken() -> str:
 @verify_page.route('/browser/<username>',methods=['POST','GET'])
 def browser(username):
     user = Users.query.filter_by(token=username).first()
-    print(user)
     if request.method=="POST":
         if "searchItem" in request.form.keys():
             searchItem = request.form["searchItem"]
-            print(searchItem)
             itemsList = ItemsListed.query.filter_by(title=searchItem).order_by(ItemsListed.time)
+            if itemsList.count()==0:
+                itemsList = ItemsListed.query.filter_by(price=searchItem).order_by(ItemsListed.time)
             return render_template("browser.html",items=itemsList,user=user,inputSearch=searchItem)
         elif "submit" in request.form.keys() and request.form["submit"] == "Add Item":
             return redirect("/newItem/"+user.token)
@@ -31,14 +31,15 @@ def browser(username):
 @verify_page.route('/history/<username>',methods=['POST','GET'])
 def history(username):
     user = Users.query.filter_by(token=username).first()
-    choice="purchase"
-    if(request.method=="POST"):
+    choice="sale"
+    if request.method=="POST":
         if request.form["submit"] == "Sales":
             choice = "sale"
         else:
             choice = "purchase"
     transactionSell = user.sales
     transactionBuy = user.purchases
+    print(transactionSell)
     return render_template("history.html",choice=choice,purchases=transactionBuy,sales=transactionSell,user=user)
 @verify_page.route('/transaction/<side>/<item>/<username>',methods=['POST','GET'])
 def transaction(side,item,username):
@@ -48,18 +49,36 @@ def transaction(side,item,username):
     
     if side == "Buyer":
         if request.method=="POST":
-            rating = request.form["quantity"]
-            userRated = Users.query.filter_by(token=sellerTrans.seller).first()
-            userRated.rating = (userRated.rating + (int)(rating)) // (len(userRated.purchases) + len(userRated.sales))
-            flash("Rating Submitted",category="success")
+            if(request.form["submit"]=="Rate"):
+                rating = request.form["quantity"]
+                userRated = Users.query.filter_by(token=sellerTrans.seller).first()
+                userRated.totalRatings += 1
+                userRated.rating += (int)(rating)
+                db.session.commit()
+                flash("Rating Submitted",category="success")
+            else:
+                complaintDesc = request.form["complaint"]
+                newComplaint = Complaints(user_complainer=user.token,description=complaintDesc,user=sellerTrans.seller)
+                db.session.add(newComplaint)
+                db.session.commit()
+                flash("Complaint Submitted",category="success")
             return redirect("/browser/"+user.token)
         return render_template("transaction.html",transaction=buyerTrans,user=user)
     else:
         if request.method=="POST":
-            rating = request.form["quantity"]
-            userRated = Users.query.filter_by(token=sellerTrans.seller).first()
-            userRated.rating = (userRated.rating + (int)(rating)) // (len(userRated.purchases) + len(userRated.sales))
-            flash("Rating Submitted",category="success")
+            if(request.form["submit"]=="Rate"):
+                rating = request.form["quantity"]
+                userRated = Users.query.filter_by(token=sellerTrans.buyer).first()
+                userRated.totalRatings += 1
+                userRated.rating += (int)(rating)
+                db.session.commit()
+                flash("Rating Submitted",category="success")
+            else:
+                complaintDesc = request.form["complaint"]
+                newComplaint = Complaints(user_complainer=user.token,description=complaintDesc,user=sellerTrans.seller)
+                db.session.add(newComplaint)
+                db.session.commit()
+                flash("Complaint Submitted",category="success")
             return redirect("/browser/"+user.token)
         return render_template("transaction.html",transaction=sellerTrans,user=user)
 
@@ -75,41 +94,6 @@ def login():
             else:
                 return redirect('/browser/'+user.token)
         flash("User or password do not matched with any of our records")
-    # username = "random89@gmail.com"
-    # password = "random89"
-    # name = "Randy"
-    # phone = "213809128645463"
-    # creditcard="3213124121"
-    # address = "Brooklyna"
-    # token = generateToken()
-    # super = False
-    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
-    # db.session.add(tryUser)
-    # db.session.commit()
-    
-    # username = "random98@gmail.com"
-    # password = "random98"
-    # name = "Rando"
-    # phone = "6545"
-    # creditcard="99888"
-    # address = "Queena"
-    # token = generateToken()
-    # super = False
-    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
-    # db.session.add(tryUser)
-    # db.session.commit()
-    
-    # username = "adminrand@gmail.com"
-    # password = "random"
-    # name = "Rambo"
-    # phone = "651312345"
-    # creditcard="99532525888"
-    # address = "Bronxena"
-    # token = generateToken()
-    # super = True
-    # tryUser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
-    # db.session.add(tryUser)
-    # db.session.commit()
     return render_template("login.html")
 
 @verify_page.route('/item/<titleName>',methods=['POST','GET'])
@@ -146,22 +130,17 @@ def itemUser(titleName,username):
             db.session.commit()
             flash("Reported.",category="success")
         elif request.form["submit"]=="Sell":
-            buyer = Users.query.filter_by(token=it.user).first()
+            buyer = Users.query.filter_by(token=it.user_bidder).first()
             newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
             newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
             user.balance+=(int)(it.price)
+            buyer.balance-=(int)(it.price)
             db.session.add(newTransactionBuy)
             db.session.add(newTransactionSell)
             db.session.delete(it)
             db.session.commit()
             flash("Item sold.",category = "success")
             return redirect("/browser/"+user.token)
-        else:
-            newComplaint = Complaints(user=it.user,description=request.form["description"],user_complainer=user.token)
-            db.session.add(newComplaint)
-            db.session.commit()
-            flash("Complaint Submitted.",category="success")
-    print(it.user_bidder)
     return render_template("itemUser.html",item=it,img=image,user=user)
 
 @verify_page.route('/newItem/<username>',methods=['POST','GET'])
@@ -242,8 +221,11 @@ def stats(username):
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):
     user = Users.query.filter_by(token=username).first()
-    print(user)
-    return render_template("account.html",user=user)
+    if user.totalRatings > 0:
+        rating = user.rating / user.totalRatings
+    else:
+        rating = 0
+    return render_template("account.html",user=user,rating = rating)
    
     def changeBalance(user):
         quantity = ' '
@@ -353,14 +335,71 @@ def balance(username):
     user = Users.query.filter_by(token=username).first()
     if request.method=="POST":
         add = request.form["balance"]
-        user.balance+=(int)(add)
-        db.session.commit()
+        if (int)(add) <=0:
+            flash("Input a positive number",category="error")
+        else:
+            flash("Balance Updated",category="success")
+            user.balance+=(int)(add)
+            db.session.commit()
     return render_template("changebalance.html",user=user)
     
 @verify_page.route('/ChangeInfo/<username>',methods=['POST','GET'])
 def ChangeInfo(username):
     user = Users.query.filter_by(token=username).first()
-    return render_template("changeinfo.html",user=user)
+    if request.method == "POST":
+        
+        if request.form["submit"] == "Change Name":
+            return render_template("changeinfo.html",user=user, change="Name")
+        elif request.form["submit"] == "Change Email":
+            return render_template("changeinfo.html",user=user, change="Email")
+        elif request.form["submit"] == "Change Password":
+            return render_template("changeinfo.html",user=user, change="Password")
+        elif request.form["submit"] == "Change Address":
+            return render_template("changeinfo.html",user=user, change="Address")
+        elif request.form["submit"] == "Change Phone":
+            return render_template("changeinfo.html",user=user, change="Phone")
+        elif request.form["submit"] == "Change Credit Card Number":
+            return render_template("changeinfo.html",user=user, change="Card")
+        else:
+            if "oldPass" in request.form.keys():
+                old = request.form["oldPass"]
+                new = request.form["newPass"]
+                confirm = request.form["confirmPass"]
+                if old != user.password:
+                    print(user.password)
+                    flash("Wrong Password.",category="error")
+                    return render_template("changeinfo.html",user=user, change="Password")
+                else:
+                    if new != confirm:
+                        flash("Passwords do not match.",category="error")
+                        return render_template("changeinfo.html",user=user, change="Password")
+                    else:
+                        user.password = new
+            elif "Address" in request.form.keys():
+                address = request.form["Address"]
+                user.address = address
+            elif "Card" in request.form.keys():
+                card = request.form["Card"]
+                user.credit_card = card
+            elif "Number" in request.form.keys():
+                num = request.form["Number"]
+                user.phone = num
+            elif "Email" in request.form.keys():
+                email = request.form["Email"]
+                confirm = request.form["confirmEmail"]
+                if email != confirm:
+                    flash("Emails do not match.")
+                    return render_template("changeinfo.html",user=user, change="Email")
+                else:
+                    user.email = email
+            elif "Name" in request.form.keys():
+                name = request.form["Name"]
+                user.name = name
+            db.session.commit()
+            flash("Changes commited",category="success")
+            return render_template("changeinfo.html",user=user, change="None")
+    else:
+        return render_template("changeinfo.html",user=user, change="None")
     
 @verify_page.route('/sign-up',methods=['POST','GET'])
 def sign_up():
