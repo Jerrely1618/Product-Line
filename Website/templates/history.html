@@ -10,7 +10,7 @@
 {% if choice == "purchase" %}
     {% for purchase in purchases %}
         <div>
-                <a href="/transaction/Buyer/{{sale.title}}/{{user.token}}">
+                <a href="/transaction/Buyer/{{purchase.title}}/{{user.token}}">
                     <h4>{{purchase.title}}</h4>
                     <h5>{{purchase.buyer_name}}</h5>
                     <p>Sold on: {{purchase.time}}</p>

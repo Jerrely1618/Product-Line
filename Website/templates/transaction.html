@@ -6,8 +6,15 @@
 <h5>{{transaction.buyer_name}}</h5>
 <p>Sold on: {{transaction.time}}</p>
 <form method="POST">
-    <p>Rate the interaction(1-5):</p>
-    <input type="number" id="quantity" name="quantity" min="1" max="5">
-    <input type="submit" value="Submit"></input>
+    <div>
+        <label for="quantity">Rate the interaction(1-5):</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="5">
+        <input type="submit" name="submit" value="Rate"></input>
+    </div>
+    <div>
+    <label for="complaint">Submit Complaint:</label>
+    <input type="text" id="complaint" name="complaint">
+    <input type="submit" name="submit" value="Complaint"></input>
+    </div>
 </form>
 {% endblock %}

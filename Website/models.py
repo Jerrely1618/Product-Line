@@ -32,6 +32,7 @@ class ItemsApplication(db.Model):
     title = db.Column(db.String(50),unique=True,primary_key = True)
     keywords = db.Column(db.String(50))
     time = db.Column(db.DateTime,default=datetime.utcnow)
+    img = db.Column(db.Text)
     priceRange = db.Column(db.String(50))
     user = db.Column(db.String,db.ForeignKey('users.token'))
 
