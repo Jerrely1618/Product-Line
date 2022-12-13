@@ -3,7 +3,8 @@
 
 {% block body %}
 <h4>{{transaction.title}}</h4>
-<h5>{{transaction.buyer_name}}</h5>
+<h5>Buyer: {{transaction.buyer_name}}</h5>
+<h5>Seller: {{transaction.seller_name}}</h5>
 <p>Sold on: {{transaction.time}}</p>
 <form method="POST">
     <div>

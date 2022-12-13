@@ -51,7 +51,9 @@ def transaction(side,item,username):
             if(request.form["submit"]=="Rate"):
                 rating = request.form["quantity"]
                 userRated = Users.query.filter_by(token=sellerTrans.seller).first()
-                userRated.rating = (userRated.rating + (int)(rating)) // (len(userRated.purchases) + len(userRated.sales))
+                userRated.totalRatings += 1
+                userRated.rating += (int)(rating)
+                db.session.commit()
                 flash("Rating Submitted",category="success")
             else:
                 complaintDesc = request.form["complaint"]
@@ -65,8 +67,10 @@ def transaction(side,item,username):
         if request.method=="POST":
             if(request.form["submit"]=="Rate"):
                 rating = request.form["quantity"]
-                userRated = Users.query.filter_by(token=sellerTrans.seller).first()
-                userRated.rating = (userRated.rating + (int)(rating)) // (len(userRated.purchases) + len(userRated.sales))
+                userRated = Users.query.filter_by(token=sellerTrans.buyer).first()
+                userRated.totalRatings += 1
+                userRated.rating += (int)(rating)
+                db.session.commit()
                 flash("Rating Submitted",category="success")
             else:
                 complaintDesc = request.form["complaint"]
@@ -90,8 +94,8 @@ def login():
                 return redirect('/browser/'+user.token)
         flash("User or password do not matched with any of our records")
         
-    # username = "random89@gmail.com"
-    # password = "random89"
+    # username = "Randy@gmail.com"
+    # password = "Randy"
     # name = "Randy"
     # phone = "213809128645463"
     # creditcard="3213124121"
@@ -102,9 +106,9 @@ def login():
     # db.session.add(tryUser)
     # db.session.commit()
     
-    # username = "random98@gmail.com"
-    # password = "random98"
-    # name = "Rando"
+    # username = "Max@gmail.com"
+    # password = "Max"
+    # name = "Max"
     # phone = "6545"
     # creditcard="99888"
     # address = "Queena"
@@ -114,8 +118,8 @@ def login():
     # db.session.add(tryUser)
     # db.session.commit()
     
-    # username = "adminrand@gmail.com"
-    # password = "random"
+    # username = "admin@gmail.com"
+    # password = "admin"
     # name = "Rambo"
     # phone = "651312345"
     # creditcard="99532525888"
@@ -252,8 +256,11 @@ def stats(username):
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):
     user = Users.query.filter_by(token=username).first()
-    print(user)
-    return render_template("account.html",user=user)
+    if user.totalRatings > 0:
+        rating = user.rating / user.totalRatings
+    else:
+        rating = 0
+    return render_template("account.html",user=user,rating = rating)
    
     def changeBalance(user):
         quantity = ' '

@@ -66,6 +66,7 @@ class Users(db.Model,UserMixin):
     phone = db.Column(db.String(50),unique=True)
     credit_card = db.Column(db.String(50))
     rating = db.Column(db.Integer,default = 0)
+    totalRatings = db.Column(db.Integer,default = 0)
     balance = db.Column(db.Integer,default = 0)
     sales = db.relationship("Transaction_seller")
     purchases = db.relationship("Transaction_buyer")
