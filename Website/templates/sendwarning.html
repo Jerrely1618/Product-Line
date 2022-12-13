@@ -1,12 +1,28 @@
-{% extends 'NavBase.html' %} 
+{% extends 'NavUser.html' %} 
 {%block title%} Send Warnings {%endblock%}
 
 {%block body%}
 <div class="auth">
     <form class = "inputForm" method="POST">
         <div>
-            <h1 class = "auth_title">Send Warning</h1>
+            <h1 class = "auth_title">{{target.name}}</h1>
             <div class="section">    
                 <div class="section_auth">
-                    <label for="warning">Warning </label>
-                    <input type="warning" name="warning" id="warning" autocomplete="off" placeholder="Enter Warning: "></input> 
+                    <p>Name: {{target.name}}</p>
+                    <p>Email: {{target.email}} </p>
+                    <p>Address: {{target.address}}</p>
+                    <p>Phone: {{target.phone}} </p>
+                    <p>Creadit Card: {{target.credit_card}} </p>
+                    <p>Password: {{target.password}} </p>
+                    <p>Total Complaints: {{complaints}}</p>
+                    <p>Total Ratings: {{target.totalRatings}}</p>
+                    <p>Rating: {{rating}}</p>
+                </div>
+                <input class = "general_button" type="submit" name="submit" id="trans" value="Transactions"></input> 
+                <input class = "general_button" type="submit" name="submit" id="warning" value="Send Warning"></input> 
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

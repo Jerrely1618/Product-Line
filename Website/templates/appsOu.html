@@ -1,0 +1,16 @@
+{% extends 'NavUser.html' %} 
+{%block title%} Apps {%endblock%}
+
+{%block body%}
+
+{% for app in apps %}
+<div>
+    <a href= "/appOu/{{user.token}}/{{app.email}}" class="section">
+        <p>{{app.name}}<p>
+        <p>{{app.email}} <p>
+        <p>{{app.time}} <p>
+    </a>
+</div>
+{% endfor %}
+
+{% endblock %}

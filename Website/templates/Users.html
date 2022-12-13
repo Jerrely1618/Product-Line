@@ -1,0 +1,13 @@
+{% extends 'NavUser.html' %}
+{%block title%}Users{%endblock%}
+{%block body%}
+    {% for ou in users %}
+        <div class="inputForm">
+            <a href= "/user/{{user.token}}/{{ou.token}}">
+                <p>Name: {{ou.name}} </p>
+                <p>Email: {{ou.email}} </p>
+                <p>Phone Number: {{ou.phone}} </p>
+            </a>
+        </div>
+    {% endfor %}
+{% endblock %}

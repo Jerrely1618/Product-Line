@@ -1,11 +1,25 @@
-{% extends 'NavBase.html' %} 
+{% extends 'NavUser.html' %} 
 {%block title%} Accept or Deny OU Application {%endblock%}
 
 {%block body%} 
-<h1>Accept or Deny Item Application</h1>
+<h1>Accept or Deny Ou Application</h1>
+<div>
+    <a href= "/appOu/{{user}}/{{app.email}}" class="section">
+        <p>Name: {{app.name}}<p>
+        <p>Email: {{app.email}} <p>
+        <p>Time: {{app.time}} <p>
+        <p>Address: {{app.address}}<p>
+        <p>Phone: {{app.phone}} <p>
+        <p>Creadit Card: {{app.credit_card}} <p>
+        <p>Password: {{app.password}} <p>
+    </a>
 </div>
-<input class="general_button" type="accept application" value="Accept OU Application"></input>
-</div>
-<input class="general_button" type="deny application" value="Deny OU Application"></input>
-</div>
+<form method="POST">
+    <div>
+    <input class="general_button" type="submit" name="submit" value="Accept Ou Application"></input>
+    </div>
+    <div>
+    <input class="general_button" type="submit" name="submit" value="Deny Ou Application"></input>
+    </div>
+</form>
 {%endblock%}

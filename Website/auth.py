@@ -41,7 +41,6 @@ def history(username):
             choice = "purchase"
     transactionSell = user.sales
     transactionBuy = user.purchases
-    print(transactionSell)
     return render_template("history.html",choice=choice,purchases=transactionBuy,sales=transactionSell,user=user)
 @verify_page.route('/transaction/<side>/<item>/<username>',methods=['POST','GET'])
 def transaction(side,item,username):
@@ -189,6 +188,11 @@ def itemUser(titleName,username):
             db.session.add(newReport)
             db.session.commit()
             flash("Reported.",category="success")
+        elif request.form["submit"] == "Delete":
+            db.session.delete(it)
+            db.session.commit()
+            flash("Item removed.",category="success")
+            return redirect("/browser/"+user.token)
         else:
             sentence = request.form["submit"]
             words = sentence.split()
@@ -241,8 +245,7 @@ def itemInput(username):
         price = request.form.get('price')
         desc = request.form.get('keywords')
         image = request.files['image']
-        buyerDummy = "Dummy"
-        newItem = ItemsListed(img=image.read(),user_bidder=buyerDummy,title=title,user=user.token,keywords=desc,price=price)
+        newItem = ItemsApplication(img=image.read(),title=title,user=user.token,keywords=desc,priceRange=price)
         db.session.add(newItem)
         db.session.commit()
     return render_template('inputItem.html',user=user)
@@ -250,63 +253,119 @@ def itemInput(username):
 @verify_page.route('/admin/<username>',methods=['POST','GET'])
 def admin(username):
     user = Users.query.filter_by(token=username).first()
-    def ProcessApplications()->None:
-        guestApplication = ' '
-        for application in guestApplication:
-            if (application.requirements == True):
-                Users.append(application.user)
-            else:
-                print("Item Application Denied")
-             
-
-    def ProcessItems()->None:
-        itemApplication = ' '
-        for application in itemApplication:
-            if (application.requirements == True):
-                ItemsListed.append(application.item)
-            else:
-                print("Item Application Denied")
-    
-
-    def WarnUser(user)->None:	
-        if(Users.complaints>=1):
-            print('User warned')
-    
-
-    def Statistics()->None:
-        reportsComplaints = len(reportsComplaints)
-        usersTotal = len(Users)
-        itemsApplications = len(itemsApplications)
-        items = ' '
-        itemsTotal = len(items)
-        userApplications = len(userApplications)
-        print("Total Users: " + usersTotal + "Total items: " + itemsTotal + "Total user applications: "
-         + userApplications + "Total item applications: " + itemsApplications)
     return render_template("admin.html",user=user)
     
 @verify_page.route('/procApp/<username>',methods=['POST','GET'])
 def procApp(username):
     user = Users.query.filter_by(token=username).first()
-    return render_template("admin.html",user=user)
+    apps = UserApplication.query.order_by(UserApplication.time)
+    return render_template("appsOu.html",user=user,apps=apps)
  
-@verify_page.route('/procItem/<username>',methods=['POST','GET'])
-def procItem(username):
+@verify_page.route('/procItems/<username>',methods=['POST','GET'])
+def procItems(username):
     user = Users.query.filter_by(token=username).first()
-    return render_template("admin.html",user=user)
+    apps = ItemsApplication.query.order_by(ItemsApplication.time)
+    return render_template("appsItems.html",user=user,apps=apps)
+
+@verify_page.route('/appItem/<username>/<app>',methods=['POST','GET'])
+def appItem(username,app):
+    user = Users.query.filter_by(token=username).first()
+    result = ItemsApplication.query.filter_by(title=app).first()
+    if request.method == "POST":
+        if request.form["submit"] == "Accept Item Application":
+            title = result.title
+            price = result.priceRange
+            desc = result.keywords
+            image = result.img
+            buyerDummy = "Dummy"
+            newItem = ItemsListed(img=image,user_bidder=buyerDummy,title=title,user=result.user,keywords=desc,price=price)
+            db.session.add(newItem)
+            db.session.commit()
+            db.session.delete(result)
+            db.session.commit()
+            flash("Application approved.",category="success")
+        else:
+            db.session.delete(result)
+            db.session.commit()
+            flash("Application denied.",category="success")
+        return redirect("/browser/"+user.token)
+    image = base64.b64encode(result.img).decode('ascii')
+    return render_template("acceptdenyItemapp.html",user=user,app=result,image=image)
  
-@verify_page.route('/warnings/<username>',methods=['POST','GET'])
+@verify_page.route('/appOu/<username>/<app>',methods=['POST','GET'])
+def appOu(username,app):
+    user = Users.query.filter_by(token=username).first()
+    print(user)
+    result = UserApplication.query.filter_by(email=app).first()
+    if request.method == "POST":
+        if request.form["submit"] == "Accept Ou Application":
+            username = result.email
+            password = result.password
+            name = result.name
+            phone = result.phone
+            creditcard= result.credit_card
+            address = result.address
+            token = generateToken()
+            super = False
+            newuser = Users(super = super,token = token,name=name,email=username,phone=phone,credit_card=creditcard,address=address,password=password)
+            db.session.add(newuser)
+            db.session.commit()
+            db.session.delete(result)
+            db.session.commit()
+            flash("Application approved.",category="success")
+        else:
+            db.session.delete(result)
+            db.session.commit()
+            flash("Application denied.",category="success")
+        return redirect("/browser/"+user.token)
+    return render_template("acceptdenyOuapp.html",user=user,app=result)
+
+@verify_page.route('/Users/<username>',methods=['POST','GET'])
 def warnings(username):
-     user = Users.query.filter_by(token=username).first()
-     return render_template("admin.html",user=user)
- 
+    user = Users.query.filter_by(token=username).first()
+    users = Users.query.order_by(Users.email)
+    return render_template("Users.html",user=user,users=users)
+@verify_page.route('/user/<username>/<target>',methods=['POST','GET'])
+def user(username,target):
+    user = Users.query.filter_by(token=username).first()
+    result = Users.query.filter_by(token=target).first()
+    com = len(result.complaints)
+    if  result.totalRatings == 0:
+        rate = 0
+    else:
+        rate = result.rating/result.totalRatings
+    if request.method=="POST":
+        if request.form["submit"] == "Send Warning":
+            if (rate < 2 and result.totalRatings > 3) or (com > 2):
+                flash("Warning Sent.",category="Success")
+                return redirect("/browser/"+user.token)
+            else:
+                flash("Warning unjustified.",category="error")
+        else:
+            return redirect("/userTrans/"+user.token+"/"+result.token)
+    return render_template("sendwarning.html",user=user,target=result,rating=rate,complaints=com)
+@verify_page.route('/userTrans/<username>/<target>',methods=['POST','GET'])
+def userTrans(username,target):
+    user = Users.query.filter_by(token=username).first()
+    result = Users.query.filter_by(token=target).first()
+    choice="sale"
+    if request.method=="POST":
+        if request.form["submit"] == "Sales":
+            choice = "sale"
+        else:
+            choice = "purchase"
+    transactionSell = result.sales
+    transactionBuy = result.purchases
+    return render_template("userTrans.html",choice=choice,purchases=transactionBuy,sales=transactionSell,user=user,target=result)
+    
 @verify_page.route('/stats/<username>',methods=['POST','GET'])
 def stats(username):
-     user = Users.query.filter_by(token=username).first()
-     itemsList = ItemsListed.query.order_by(ItemsListed.time)
-     userList = Users.query.order_by(Users.name)
-     userApps = UserApplication.query.order_by(UserApplication.name)
-     itemsApps = ItemsApplication.query.order_by(ItemsApplication.title)
-     return render_template("Stats.html",user=user,users=userList.count(),itemsApp=itemsApps.count(),userApp = userApps.count(),items = itemsList.count())
+    user = Users.query.filter_by(token=username).first()
+    itemsList = ItemsListed.query.order_by(ItemsListed.time)
+    userList = Users.query.order_by(Users.name)
+    userApps = UserApplication.query.order_by(UserApplication.name)
+    itemsApps = ItemsApplication.query.order_by(ItemsApplication.title)
+    return render_template("Stats.html",user=user,users=userList.count(),itemsApp=itemsApps.count(),userApp = userApps.count(),items = itemsList.count())
  
 @verify_page.route('/account/<username>',methods=['POST','GET'])
 def account(username):

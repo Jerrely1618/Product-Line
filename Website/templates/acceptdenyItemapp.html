@@ -1,11 +1,22 @@
-{% extends 'NavBase.html' %} 
+{% extends 'NavUser.html' %} 
 {%block title%} Accept or Deny Item Application {%endblock%}
 
 {%block body%} 
 <h1>Accept or Deny Item Application</h1>
+<div class="section">
+        <p>Title: {{app.title}}</p>
+        <p>KeyWords: {{app.keywords}} </p>
+        <p>Time: {{app.time}} </p>
+        <p>Price: {{app.priceRange}}</p>
+        <p>User: {{app.user}}</p>
+        <img src="data:;base64,{{image}}">
 </div>
-<input class="general_button" type="accept item app" value="Accept Item Application"></input>
-</div>
-<input class="general_button" type="deny item app" value="Deny Item Application"></input>
-</div>
+<form method="POST">
+        <div>
+        <input class="general_button" type="submit" name="submit" id="submit" value="Accept Item Application"></input>
+        </div>
+        <div>
+        <input class="general_button" type="submit" name="submit" id="submit" value="Deny Item Application"></input>
+        </div>
+</form>
 {%endblock%}
