@@ -198,12 +198,14 @@ def itemUser(titleName,username):
             if "reason" in request.form.keys():
                 reason = request.form["reason"]
                 if buyer.balance >= (int)(cost):
-                    newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
-                    newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
-                    user.balance+=(int)(it.price)
-                    buyer.balance-=(int)(it.price)
+                    newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = buyer.token)
+                    newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = buyer.token)
+                    user.balance+=(int)(cost)
+                    buyer.balance-=(int)(cost)
                     db.session.add(newTransactionBuy)
                     db.session.add(newTransactionSell)
+                    for buyer in it.buyers:
+                        db.session.delete(buyer)
                     db.session.delete(it)
                     db.session.commit()
                     flash("Item sold.",category = "success")
@@ -211,15 +213,17 @@ def itemUser(titleName,username):
                 else:
                     flash("User has no funds.",category="error")
                     return redirect("/browser/"+user.token)
-            if cost < it.price:
+            if (int)(cost) < (int)(it.price):
                 return render_template("itemUser.html",item=it,img=image,user=user,inst="reason",buyer=buyer,total = cost)
-            if buyer.balance >= cost:
-                newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
-                newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = it.user_bidder)
-                user.balance+=(int)(it.price)
-                buyer.balance-=(int)(it.price)
+            if buyer.balance >= (int)(cost):
+                newTransactionBuy = Transaction_buyer(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = buyer.token)
+                newTransactionSell = Transaction_seller(buyer_name = buyer.name,seller_name=user.name,title=it.title,seller = user.token,buyer = buyer.token)
+                user.balance+=(int)(cost)
+                buyer.balance-=(int)(cost)
                 db.session.add(newTransactionBuy)
                 db.session.add(newTransactionSell)
+                for buyer in it.buyers:
+                    db.session.delete(buyer)
                 db.session.delete(it)
                 db.session.commit()
                 flash("Item sold.",category = "success")
