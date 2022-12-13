@@ -3,3 +3,16 @@
 
 {%block body%}
 <h2>Reported Users</h2>
+
+ <ul>
+    <li>{{user.name}}</li>
+    <li>{{user.name}}</li>
+    <li>{{user.name}}</li>
+    <li>{{user.name}}</li>
+    <li>{{user.name}}</li>
+ </ul> 
+
+ <a href = "/sendwarning/{{user.token}}">
+    <input class="general_button" type="submit" name= "send warning" value="Send Warning"></input>
+    </a>
+{%endblock%}
